@@ -34,7 +34,7 @@ export default function OverviewPanel({
             <Link href={`/${locale}/contact-us`} className="ctl-solid">
               {dict.rfq_cta}
             </Link>
-            <Link href={`/${locale}/services`} className="ctl-outline">
+            <Link href={`/${locale}?view=pathways`} scroll={false} className="ctl-outline">
               {dict.hero_cta}
             </Link>
           </div>
