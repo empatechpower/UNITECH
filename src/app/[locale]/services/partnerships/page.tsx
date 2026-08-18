@@ -1,12 +1,26 @@
+import { notFound } from 'next/navigation';
 import { getDictionary } from '@/i18n/getDictionary';
 import { isValidLocale } from '@/i18n/config';
 import type { Locale } from '@/i18n/config';
-import PartnershipsPageClient from './PartnershipsPageClient';
+import Screen from '@/components/screen/Screen';
+import ServiceScreen from '@/components/services/ServiceScreen';
+import { getService } from '@/data/services';
 
-export default async function PartnershipsPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: rawLocale } = await params;
   const locale = isValidLocale(rawLocale) ? rawLocale : ('en' as Locale);
   const dict = await getDictionary(locale);
+  const service = getService('partnerships');
+  if (!service) notFound();
 
-  return <PartnershipsPageClient dict={dict} locale={locale} />;
+  return (
+    <Screen>
+      <ServiceScreen
+        locale={locale}
+        service={service}
+        dict={dict.partnerships}
+        contactCta={dict.nav.contact}
+      />
+    </Screen>
+  );
 }

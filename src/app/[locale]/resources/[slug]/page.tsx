@@ -4,12 +4,19 @@ import Link from 'next/link';
 import { getDictionary } from '@/i18n/getDictionary';
 import { isValidLocale } from '@/i18n/config';
 import type { Locale } from '@/i18n/config';
+import Screen from '@/components/screen/Screen';
 import { resourceArticles, categoryLabels, getResourceArticle } from '@/data/resources';
 
 export async function generateStaticParams() {
   return resourceArticles.map((a) => ({ slug: a.slug }));
 }
 
+/**
+ * The one documented exception to the fixed-screen rule: article bodies are
+ * prose and cannot be made to fit a viewport honestly. The screen frame still
+ * holds, but the reading column scrolls inside it rather than the page
+ * scrolling, so the chrome stays put.
+ */
 export default async function ResourceArticlePage({
   params,
 }: {
@@ -24,99 +31,64 @@ export default async function ResourceArticlePage({
   const article = getResourceArticle(slug);
   if (!article) notFound();
 
-  const related = resourceArticles.filter((a) => a.slug !== article.slug).slice(0, 3);
+  const copy = article[lang];
 
   return (
-    <>
-      <article className="relative bg-warm-white font-ui">
-        <div className="section-padding max-w-[900px] mx-auto pt-32 md:pt-40 pb-10 md:pb-14">
-          <Link
-            href={`/${locale}/resources`}
-            className="inline-flex items-center gap-2 text-graphite text-xs tracking-[0.15em] uppercase font-semibold hover:text-accent transition-colors duration-300 mb-8"
-          >
-            ← {t.back_link}
-          </Link>
+    <Screen>
+      <div className="grid min-h-0 flex-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)]">
+        <div className="flex min-h-0 flex-col overflow-y-auto">
+          <div className="screen-pad py-8 lg:py-10">
+            <Link
+              href={`/${locale}/resources`}
+              className="font-mono text-[10px] uppercase tracking-[0.16em] text-graphite transition-colors hover:text-accent"
+            >
+              &larr; {t.back_link}
+            </Link>
 
-          <div className="flex items-center gap-3 mb-6 text-[11px] tracking-[0.15em] uppercase font-semibold">
-            <span className="text-accent">{categoryLabels[article.category][lang]}</span>
-            <span className="text-graphite">·</span>
-            <span className="text-graphite normal-case tracking-normal font-normal">
+            <p className="mt-8 font-mono text-[10px] uppercase tracking-[0.16em] text-graphite">
+              {categoryLabels[article.category][lang]}
+              <span className="mx-2 text-rule-strong">/</span>
               {article.readTime} {t.read_suffix}
-            </span>
-          </div>
-
-          <h1 className="editorial-heading text-3xl sm:text-5xl md:text-6xl mb-6 leading-[1.05]">
-            {article[lang].title}
-          </h1>
-          <p className="text-graphite text-lg leading-relaxed max-w-2xl">{article[lang].excerpt}</p>
-        </div>
-
-        <div className="section-padding max-w-[1200px] mx-auto mb-14 md:mb-20">
-          <div className="relative aspect-[16/9] overflow-hidden">
-            <Image
-              src={article.image}
-              alt={article[lang].title}
-              fill
-              priority
-              className="object-cover"
-              sizes="(min-width: 1200px) 1200px, 100vw"
-            />
-          </div>
-        </div>
-
-        <div className="section-padding max-w-[720px] mx-auto pb-24 md:pb-32">
-          {article[lang].body.map((paragraph, i) => (
-            <p key={i} className="text-ink/90 text-base md:text-lg leading-loose mb-6">
-              {paragraph}
             </p>
-          ))}
-        </div>
-      </article>
 
-      {/* CTA */}
-      <section className="relative bg-ink font-ui py-20 md:py-28 overflow-hidden">
-        <div className="absolute inset-0 grid-technical opacity-[0.08]" />
-        <div className="absolute inset-0 mesh-glow opacity-60" />
-        <div className="relative z-10 text-center section-padding">
-          <h2 className="editorial-heading !text-white text-2xl sm:text-4xl md:text-5xl mb-10">
-            {t.article_cta_title}
-          </h2>
-          <Link
-            href={`/${locale}/contact-us`}
-            className="btn-editorial !bg-warm-white !text-ink hover:!bg-accent hover:!text-warm-white"
-          >
-            {t.article_cta_button}
-          </Link>
-        </div>
-      </section>
+            <h1 className="screen-display mt-3 text-[clamp(1.6rem,3.2vw,2.6rem)]">
+              {copy.title}
+            </h1>
 
-      {/* Related articles */}
-      <section className="relative bg-warm-white font-ui py-20 md:py-28">
-        <div className="section-padding max-w-[1440px] mx-auto">
-          <p className="eyebrow mb-10">{t.title}</p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-6">
-            {related.map((a) => (
-              <Link key={a.slug} href={`/${locale}/resources/${a.slug}`} className="group block">
-                <div className="relative aspect-[4/3] mb-5 overflow-hidden">
-                  <Image
-                    src={a.image}
-                    alt={a[lang].title}
-                    fill
-                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                    sizes="(min-width: 768px) 33vw, 100vw"
-                  />
-                </div>
-                <div className="flex items-center gap-3 mb-2 text-[11px] tracking-[0.15em] uppercase text-accent font-semibold">
-                  <span>{categoryLabels[a.category][lang]}</span>
-                </div>
-                <h3 className="font-editorial text-lg text-ink leading-snug tracking-[-0.01em] group-hover:text-accent transition-colors duration-300">
-                  {a[lang].title}
-                </h3>
+            <p className="mt-5 max-w-[62ch] font-ui text-[15px] leading-relaxed text-ink">
+              {copy.excerpt}
+            </p>
+
+            <div className="mt-6 space-y-5 rule-t pt-6">
+              {copy.body.map((para, i) => (
+                <p key={i} className="max-w-[68ch] font-ui text-[15px] leading-relaxed text-graphite">
+                  {para}
+                </p>
+              ))}
+            </div>
+
+            <div className="mt-10 rule-t pt-6">
+              <h2 className="font-ui text-lg font-semibold tracking-tight text-ink">
+                {t.article_cta_title}
+              </h2>
+              <Link href={`/${locale}/contact-us`} className="ctl-solid mt-4">
+                {t.article_cta_button}
               </Link>
-            ))}
+            </div>
           </div>
         </div>
-      </section>
-    </>
+
+        <div className="relative order-first min-h-[220px] rule-l lg:order-none lg:min-h-0">
+          <Image
+            src={article.image}
+            alt=""
+            fill
+            priority
+            sizes="(max-width: 1024px) 100vw, 48vw"
+            className="photo-grade object-cover"
+          />
+        </div>
+      </div>
+    </Screen>
   );
 }

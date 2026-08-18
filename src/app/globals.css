@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Fjalla+One&family=Oswald:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
@@ -6,105 +5,6 @@
  ---break---
  */
 @custom-variant dark (&:is(.dark *));
-
-@font-face {
-  font-family: 'Microgramma D Extended';
-  src: url('/fonts/MicrogrammaDExtendedBold.otf') format('opentype');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-/*
- * Legacy "cinematic industrial" tokens (navy/steel/accent) — preserved as-is.
- * About Us, Services (hub + 4 detail pages), and Contact Us still reference
- * these classes directly and are not part of this redesign pass yet.
- */
-@theme {
-  --color-navy-950: #060E1A;
-  --color-navy-900: #0A1628;
-  --color-navy-800: #0F1F38;
-  --color-navy-700: #152A4A;
-  --color-navy-600: #1B2D4F;
-  --color-navy-500: #243B66;
-  --color-navy-400: #2E4A7D;
-
-  --color-steel-50: #F7FAFC;
-  --color-steel-100: #EDF2F7;
-  --color-steel-200: #E2E8F0;
-  --color-steel-300: #CBD5E0;
-  --color-steel-400: #A0AEC0;
-  --color-steel-500: #718096;
-  --color-steel-600: #4A5568;
-  --color-steel-700: #2D3748;
-
-  --color-accent-blue: #3B82F6;
-  --color-accent-cyan: #06B6D4;
-  --color-accent-gold: #D4A843;
-
-  --font-micro: "Microgramma D Extended", "Eurostile Extended", "Orbitron", sans-serif;
-  --font-body: "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
-  --font-display: "Fjalla One", "Oswald", sans-serif;
-
-  --animate-fade-in: fadeIn 0.6s ease-out forwards;
-  --animate-fade-up: fadeUp 0.7s ease-out forwards;
-  --animate-slide-right: slideRight 0.6s ease-out forwards;
-  --animate-scale-in: scaleIn 0.5s ease-out forwards;
-  --animate-line-grow: lineGrow 1s ease-out forwards;
-  --animate-scroll-line: scrollLine 1.5s ease-in-out infinite;
-  --animate-float: float 8s ease-in-out infinite;
-  --animate-scan-line: scanLine 4s ease-in-out infinite;
-  --animate-grid-drift: gridDrift 60s linear infinite;
-  --animate-gradient-shift: gradientShift 8s ease-in-out infinite;
-  --animate-pulse-glow: pulseGlow 2s ease-in-out infinite;
-}
-
-@keyframes fadeIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
-}
-@keyframes fadeUp {
-  0% { opacity: 0; transform: translateY(30px); }
-  100% { opacity: 1; transform: translateY(0); }
-}
-@keyframes slideRight {
-  0% { opacity: 0; transform: translateX(-30px); }
-  100% { opacity: 1; transform: translateX(0); }
-}
-@keyframes scaleIn {
-  0% { opacity: 0; transform: scale(0.9); }
-  100% { opacity: 1; transform: scale(1); }
-}
-@keyframes lineGrow {
-  0% { width: 0%; }
-  100% { width: 100%; }
-}
-@keyframes scrollLine {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(400%); }
-}
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-4px); }
-}
-@keyframes scanLine {
-  0% { top: -2%; opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { top: 102%; opacity: 0; }
-}
-@keyframes gridDrift {
-  0% { background-position: 0px 0px; }
-  100% { background-position: 80px 80px; }
-}
-@keyframes gradientShift {
-  0%, 100% { opacity: 0.03; }
-  50% { opacity: 0.06; }
-}
-@keyframes pulseGlow {
-  0%, 100% { opacity: 0.4; box-shadow: 0 0 4px rgba(6,182,212,0.3); }
-  50% { opacity: 1; box-shadow: 0 0 8px rgba(6,182,212,0.6); }
-}
 
 /*
  * New editorial design system — bright, warm, dual-pathway (Industrial /
@@ -118,8 +18,15 @@
   --color-ink: #14161A;
   --color-graphite: #55575C;
 
-  --font-editorial: var(--font-fraunces), "Iowan Old Style", Georgia, serif;
-  --font-ui: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
+  /* Latin from IBM Plex; Traditional Chinese falls through to the system CJK
+     face (PingFang TC on Apple, Microsoft JhengHei on Windows, Noto Sans CJK
+     on Android). A CJK webfont would cost 3-8MB for glyphs every target
+     device already has. */
+  --font-ui: var(--font-plex-sans), "PingFang TC", "Microsoft JhengHei",
+             "Noto Sans TC", "Hiragino Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* Legacy alias: pages not yet migrated still reference font-editorial. */
+  --font-editorial: var(--font-plex-sans), "PingFang TC", "Microsoft JhengHei", sans-serif;
 }
 
 /* Accent tokens are runtime CSS variables (not static @theme values) so a
@@ -129,6 +36,14 @@
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
   --color-accent-secondary: var(--accent-secondary);
+
+  /* Screen system: the ground is a runtime var so [data-industry] swaps the
+     whole material world (ground, rule, texture, accent), not just a hue. */
+  --color-ground: var(--ground);
+  --color-ground-raised: var(--ground-raised);
+  --color-ground-sunk: var(--ground-sunk);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
 }
 
 :root {
@@ -145,9 +60,15 @@
   --border: var(--color-concrete);
   --input: var(--color-concrete);
 
-  /* Industrial pathway (default): electric blue / steel gray */
-  --accent: #2E5CFF;
-  --accent-soft: #2E5CFF1a;
+  /* Industrial ground: cool bone, fine technical grid, electric blue. */
+  --ground: #F2F3F4;
+  --ground-raised: #FFFFFF;
+  --ground-sunk: #E4E6E9;
+  --rule: rgb(22 24 28 / 0.12);
+  --rule-strong: rgb(22 24 28 / 0.26);
+
+  --accent: #1F4FD8;
+  --accent-soft: rgb(31 79 216 / 0.10);
   --accent-secondary: #6B7280;
 
   --primary: var(--accent);
@@ -156,9 +77,15 @@
 }
 
 [data-industry="green"] {
-  /* Green Technology pathway: emerald / moss */
-  --accent: #0F7A5C;
-  --accent-soft: #0F7A5C1a;
+  /* Sustainable ground: warm bone, contour texture, deep green. */
+  --ground: #F5F2EC;
+  --ground-raised: #FFFDF9;
+  --ground-sunk: #E9E3D7;
+  --rule: rgb(22 24 28 / 0.12);
+  --rule-strong: rgb(22 24 28 / 0.26);
+
+  --accent: #176B4F;
+  --accent-soft: rgb(23 107 79 / 0.10);
   --accent-secondary: #5C6B47;
 }
 
@@ -167,15 +94,8 @@
     scroll-behavior: smooth;
   }
 
-  /*
-   * Base font stays the legacy `font-body` (Arial Narrow) because About/
-   * Contact/Services pages inherit it on lots of un-classed text — changing
-   * it here would silently re-font those un-migrated pages. New work
-   * (Header, Footer, Homepage) applies `font-ui`/`font-editorial` explicitly
-   * on its own root wrapper instead.
-   */
   body {
-    @apply font-body antialiased bg-background text-foreground;
+    @apply font-ui antialiased bg-background text-foreground;
     font-size: 16px;
     letter-spacing: 0.01em;
   }
@@ -189,110 +109,7 @@
 }
 
 @layer components {
-  .section-padding {
-    @apply px-5 sm:px-8 md:px-12 lg:px-20 xl:px-28;
-  }
 
-  .heading-micro {
-    @apply font-micro uppercase tracking-[0.2em] font-bold;
-  }
-
-  .heading-display {
-    @apply font-display uppercase tracking-wide font-normal;
-  }
-
-  .label-tag {
-    @apply font-micro text-[10px] sm:text-xs tracking-[0.3em] uppercase text-accent-cyan;
-  }
-
-  .gradient-line {
-    @apply h-[1px] bg-gradient-to-r from-accent-cyan via-accent-blue to-transparent;
-  }
-
-  .card-industrial {
-    @apply relative bg-navy-800/60 border border-steel-700/30 backdrop-blur-sm
-           transition-all duration-500 overflow-hidden;
-  }
-
-  .card-industrial::before {
-    content: '';
-    @apply absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-accent-cyan to-transparent
-           scale-x-0 origin-left transition-transform duration-500;
-  }
-
-  .card-industrial:hover::before {
-    @apply scale-x-100;
-  }
-
-  .btn-primary {
-    @apply inline-flex items-center gap-2 px-7 py-3.5 bg-accent-cyan/10 border border-accent-cyan/40
-           text-accent-cyan font-micro text-xs tracking-[0.2em] uppercase
-           hover:bg-accent-cyan/20 hover:border-accent-cyan/70
-           transition-all duration-300;
-  }
-
-  .btn-solid {
-    @apply inline-flex items-center gap-2 px-7 py-3.5 bg-accent-cyan text-navy-950
-           font-micro text-xs tracking-[0.2em] uppercase font-bold
-           hover:bg-accent-blue transition-all duration-300;
-  }
-
-  .noise-overlay {
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-  }
-
-  /* --- New editorial design system primitives --- */
-
-  .editorial-heading {
-    @apply font-editorial font-normal leading-[1.02] tracking-[-0.02em] text-ink;
-  }
-
-  .eyebrow {
-    @apply font-ui text-[11px] sm:text-xs tracking-[0.25em] uppercase text-accent font-semibold;
-  }
-
-  .btn-editorial {
-    @apply inline-flex items-center gap-2 px-7 py-3.5 bg-accent text-warm-white
-           font-ui text-xs tracking-[0.15em] uppercase font-semibold
-           hover:bg-ink transition-colors duration-300;
-  }
-
-  .btn-editorial-outline {
-    @apply inline-flex items-center gap-2 px-7 py-3.5 bg-transparent border border-ink/25
-           text-ink font-ui text-xs tracking-[0.15em] uppercase font-semibold
-           hover:border-ink hover:bg-ink/5 transition-colors duration-300;
-  }
-
-  /* Fine technical grid — industrial pathway texture */
-  .grid-technical {
-    background-image:
-      linear-gradient(to right, color-mix(in oklab, var(--ink) 6%, transparent) 1px, transparent 1px),
-      linear-gradient(to bottom, color-mix(in oklab, var(--ink) 6%, transparent) 1px, transparent 1px);
-    background-size: 48px 48px;
-  }
-
-  /* Topographic contour lines — green pathway texture */
-  .contour-lines {
-    background-image: repeating-radial-gradient(
-      circle at 30% 20%,
-      color-mix(in oklab, var(--accent) 10%, transparent) 0px,
-      transparent 2px,
-      transparent 42px,
-      color-mix(in oklab, var(--accent) 8%, transparent) 44px
-    );
-  }
-
-  /* Soft mesh-gradient accent glow, shared by both pathways */
-  .mesh-glow {
-    background-image:
-      radial-gradient(38% 38% at 15% 10%, color-mix(in oklab, var(--accent) 14%, transparent) 0%, transparent 70%),
-      radial-gradient(32% 32% at 85% 90%, color-mix(in oklab, var(--accent-secondary) 12%, transparent) 0%, transparent 70%);
-  }
-
-  /* Paper grain — softened noise for warm-white backgrounds */
-  .paper-grain {
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
-  }
 }
 
 @layer utilities {
@@ -430,4 +247,170 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+}
+/* =========================================================================
+   SCREEN SYSTEM — "Technical Record"
+   Pages are one fixed viewport. Content changes by state, never by scroll.
+   ========================================================================= */
+
+/* The shell is opted into per page by <Screen>, which sets data-shell on
+   <html>. Un-migrated pages keep normal document scrolling and their existing
+   window-scroll listeners. */
+html[data-shell='screen'],
+html[data-shell='screen'] body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+@layer components {
+  /* --- Structure ------------------------------------------------------- */
+
+  .screen-frame {
+    @apply relative flex h-full min-h-0 w-full flex-col overflow-hidden bg-ground text-ink;
+  }
+
+  .screen-pad {
+    @apply px-5 sm:px-8 lg:px-12 xl:px-16;
+  }
+
+  /* Panels are all present in the DOM for crawlers and no-JS readers; only
+     the active one is visible, focusable and hit-testable. */
+  .panel {
+    @apply absolute inset-0 flex min-h-0 flex-col;
+    transition: opacity 420ms cubic-bezier(0.16, 1, 0.3, 1),
+                transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .panel[data-state='inactive'] {
+    @apply pointer-events-none opacity-0;
+    transform: translateY(10px);
+  }
+
+  .panel[data-state='active'] {
+    @apply opacity-100;
+    transform: none;
+  }
+
+  /* --- Type ------------------------------------------------------------ */
+
+  .screen-display {
+    @apply font-ui font-semibold leading-[1.04] tracking-[-0.025em] text-ink;
+  }
+
+  .screen-label {
+    @apply font-mono text-[10px] uppercase tracking-[0.18em] text-graphite;
+  }
+
+  /* Every figure on the site is mono and tabular so columns of specs line up. */
+  .spec-figure {
+    @apply font-mono tabular-nums tracking-[-0.01em] text-ink;
+  }
+
+  /* --- Rules ----------------------------------------------------------- */
+  /* Hairlines are structural only: they separate real content regions.
+     Never used as decoration. */
+
+  .rule-t { @apply border-t border-rule; }
+  .rule-b { @apply border-b border-rule; }
+  .rule-l { @apply border-l border-rule; }
+  .rule-r { @apply border-r border-rule; }
+
+  /* --- Controls -------------------------------------------------------- */
+  /* Radius 0 across the whole system. One shape, no exceptions. */
+
+  .ctl {
+    @apply inline-flex select-none items-center justify-center gap-2 font-ui
+           text-[11px] font-semibold uppercase tracking-[0.14em]
+           transition-[background-color,color,border-color] duration-200;
+  }
+
+  .ctl-solid {
+    @apply inline-flex select-none items-center justify-center gap-2 font-ui
+           text-[11px] font-semibold uppercase tracking-[0.14em]
+           transition-[background-color,color,border-color] duration-200
+           bg-accent px-6 py-3 text-white hover:bg-ink active:translate-y-px;
+  }
+
+  .ctl-outline {
+    @apply inline-flex select-none items-center justify-center gap-2 font-ui
+           text-[11px] font-semibold uppercase tracking-[0.14em]
+           transition-[background-color,color,border-color] duration-200
+           border border-rule-strong bg-transparent px-6 py-3 text-ink
+           hover:border-ink hover:bg-ground-sunk active:translate-y-px;
+  }
+
+  /* State selectors: the primary interaction of the whole site. */
+  .ctl-state {
+    @apply relative inline-flex select-none items-center justify-center gap-2
+           font-ui text-[11px] font-semibold uppercase tracking-[0.14em]
+           transition-colors duration-200 px-4 py-2.5 text-graphite hover:text-ink;
+  }
+
+  .ctl-state[aria-selected='true'],
+  .ctl-state[data-active='true'] {
+    @apply text-ink;
+  }
+
+  .ctl-state[aria-selected='true']::after,
+  .ctl-state[data-active='true']::after {
+    content: '';
+    @apply absolute inset-x-0 bottom-0 h-[2px] bg-accent;
+  }
+
+  /* --- Panel content --------------------------------------------------- */
+
+  /* On phones a full screen genuinely cannot hold a dense panel in two
+     languages, so content scrolls inside the panel frame rather than the
+     document scrolling. Desktop never scrolls. */
+  .panel-body {
+    @apply flex-1 overflow-y-auto lg:overflow-hidden;
+    min-height: 0;
+  }
+
+  /* Photography is graded to its ground: the industrial world runs cool and
+     hard, the sustainable world warm and open. Same asset, two materials. */
+  .photo-grade {
+    filter: saturate(0.72) contrast(1.06) brightness(0.97) sepia(0.06)
+            hue-rotate(-8deg);
+  }
+
+  [data-industry='green'] .photo-grade {
+    filter: saturate(0.82) contrast(1.02) brightness(1.02) sepia(0.14)
+            hue-rotate(12deg);
+  }
+
+  /* --- Ground texture -------------------------------------------------- */
+  /* The two pathways get materially different grounds, not a hue swap. */
+
+  .ground-texture {
+    @apply pointer-events-none absolute inset-0;
+    background-image:
+      linear-gradient(to right, var(--rule) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--rule) 1px, transparent 1px);
+    background-size: 64px 64px;
+    opacity: 0.5;
+    mask-image: radial-gradient(120% 90% at 50% 0%, #000 20%, transparent 78%);
+  }
+
+  [data-industry='green'] .ground-texture {
+    background-image: repeating-radial-gradient(
+      circle at 22% 8%,
+      color-mix(in oklab, var(--accent) 16%, transparent) 0px,
+      transparent 1.5px,
+      transparent 54px,
+      color-mix(in oklab, var(--accent) 12%, transparent) 56px
+    );
+    background-size: auto;
+    opacity: 0.45;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    transition-duration: 1ms;
+  }
+  .panel[data-state='inactive'] {
+    transform: none;
+  }
 }
