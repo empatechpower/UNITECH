@@ -39,7 +39,7 @@ export default async function ResourceArticlePage({
         <div className="flex min-h-0 flex-col overflow-y-auto">
           <div className="screen-pad py-8 lg:py-10">
             <Link
-              href={`/${locale}/resources`}
+              href={`/${locale}?view=insights`}
               className="font-mono text-[10px] uppercase tracking-[0.16em] text-graphite transition-colors hover:text-accent"
             >
               &larr; {t.back_link}

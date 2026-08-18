@@ -35,7 +35,14 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     },
     {
       id: 'insights',
-      content: <InsightsPanel locale={locale} dict={t} readSuffix={dict.resources.read_suffix} />,
+      content: (
+        <InsightsPanel
+          locale={locale}
+          title={t.resources_title}
+          filterAllLabel={dict.resources.filter_all}
+          readSuffix={dict.resources.read_suffix}
+        />
+      ),
     },
   ];
 

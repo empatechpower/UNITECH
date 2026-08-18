@@ -1,48 +1,89 @@
+'use client';
+
+import { useMemo, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Locale } from '@/i18n/config';
-import { categoryLabels, resourceArticles } from '@/data/resources';
+import {
+  categoryLabels,
+  resourceArticles,
+  type ResourceCategoryKey,
+} from '@/data/resources';
+
+type Filter = ResourceCategoryKey | 'all';
 
 /**
- * Every article, not a selection: eight grid slots for seven pieces, with the
- * lead taking two, so the grid fills exactly at each breakpoint. The card foot
- * is a fixed height so image bottoms line up across a row regardless of how
- * long a title runs.
+ * The whole editorial library, filtered by category. This replaced the separate
+ * Resources index, so it carries every article rather than a selection.
+ *
+ * Unfiltered, the lead takes two of the eight grid slots so seven articles fill
+ * the grid exactly. Filtered views simply carry fewer cards.
  */
 export default function InsightsPanel({
   locale,
-  dict,
+  title,
+  filterAllLabel,
   readSuffix,
 }: {
   locale: Locale;
-  dict: Record<string, string>;
+  title: string;
+  filterAllLabel: string;
   readSuffix: string;
 }) {
+  const [filter, setFilter] = useState<Filter>('all');
+
+  const categories = useMemo(() => {
+    const used = new Set(resourceArticles.map((a) => a.category));
+    return (Object.keys(categoryLabels) as ResourceCategoryKey[]).filter((c) => used.has(c));
+  }, []);
+
+  const articles = useMemo(
+    () =>
+      filter === 'all'
+        ? resourceArticles
+        : resourceArticles.filter((a) => a.category === filter),
+    [filter]
+  );
+
   return (
     <div className="panel-body flex flex-col">
-      <div className="screen-pad flex shrink-0 flex-wrap items-baseline justify-between gap-4 py-4 lg:py-5">
-        <h2 className="screen-display text-[clamp(1.3rem,2.6vw,1.9rem)]">
-          {dict.resources_title}
-        </h2>
-        <Link
-          href={`/${locale}/resources`}
-          className="font-mono text-[11px] uppercase tracking-[0.16em] text-graphite underline-offset-4 transition-colors hover:text-accent hover:underline"
-        >
-          {dict.resources_cta}
-        </Link>
+      <div className="screen-pad flex shrink-0 flex-wrap items-center justify-between gap-x-6 gap-y-2 py-3 lg:py-3.5">
+        <h2 className="screen-display text-[clamp(1.2rem,2.2vw,1.6rem)]">{title}</h2>
+
+        <div className="flex flex-wrap items-center gap-x-1 gap-y-1">
+          <button
+            type="button"
+            onClick={() => setFilter('all')}
+            data-active={filter === 'all'}
+            className="ctl-state whitespace-nowrap px-2.5"
+          >
+            {filterAllLabel}
+          </button>
+          {categories.map((c) => (
+            <button
+              key={c}
+              type="button"
+              onClick={() => setFilter(c)}
+              data-active={filter === c}
+              className="ctl-state whitespace-nowrap px-2.5"
+            >
+              {categoryLabels[c][locale] ?? categoryLabels[c].en}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div className="grid min-h-0 flex-1 grid-cols-1 gap-px bg-rule sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-2">
-        {resourceArticles.map((a, i) => {
+      <div className="grid min-h-0 flex-1 auto-rows-fr grid-cols-1 gap-px rule-t bg-rule sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-2">
+        {articles.map((a, i) => {
           const copy = a[locale] ?? a.en;
-          const lead = i === 0;
+          const lead = filter === 'all' && i === 0;
           return (
             <Link
               key={a.slug}
               href={`/${locale}/resources/${a.slug}`}
               className={`group flex min-h-0 flex-col bg-ground ${lead ? 'sm:col-span-2' : ''}`}
             >
-              <div className="relative min-h-[120px] flex-1 overflow-hidden">
+              <div className="relative min-h-[110px] flex-1 overflow-hidden">
                 <Image
                   src={a.image}
                   alt=""
@@ -55,7 +96,7 @@ export default function InsightsPanel({
                   className="photo-grade object-cover transition-transform duration-500 group-hover:scale-[1.04]"
                 />
               </div>
-              <div className="flex h-[104px] shrink-0 flex-col justify-start p-4 lg:h-[112px] lg:p-5">
+              <div className="flex h-[100px] shrink-0 flex-col justify-start p-4 lg:h-[108px] lg:p-5">
                 <p className="spec-figure text-[10px] uppercase tracking-[0.16em] text-graphite">
                   {categoryLabels[a.category][locale] ?? categoryLabels[a.category].en}
                   <span className="mx-2 text-rule-strong">/</span>
