@@ -68,6 +68,7 @@ function NavShell({
     id === states[0]?.id ? `/${locale}` : `/${locale}?view=${id}`;
 
   return (
+    <>
     <header className="relative z-50 h-14 shrink-0 rule-b bg-ground/95 backdrop-blur-md lg:h-[68px]">
       <div className="screen-pad flex h-full items-center gap-3 xl:gap-6">
         <Link href={`/${locale}`} className="flex shrink-0 items-center" aria-label="UNiTECH">
@@ -147,41 +148,44 @@ function NavShell({
         </div>
       </div>
 
-      <div
-        id="site-menu"
-        inert={!menuOpen ? true : undefined}
-        className={`fixed inset-x-0 bottom-0 top-14 z-40 overflow-y-auto bg-ground transition-opacity duration-200 lg:hidden ${
-          menuOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
-        }`}
-      >
-        <nav className="screen-pad flex flex-col pt-2" aria-label={nav.state_label}>
-          {states.map((s) => (
-            <Link
-              key={s.id}
-              href={stateHref(s.id)}
-              className={`rule-b py-4 font-ui text-lg tracking-tight ${
-                activeState === s.id ? 'text-accent' : 'text-ink'
-              }`}
-            >
-              {s.label}
-            </Link>
-          ))}
-          {pages.map((p) => (
-            <Link
-              key={p.href}
-              href={p.href}
-              className={`rule-b py-4 font-ui text-lg tracking-tight ${
-                pathname.startsWith(p.href) ? 'text-accent' : 'text-ink'
-              }`}
-            >
-              {p.label}
-            </Link>
-          ))}
-          <div className="py-6">
-            </div>
-        </nav>
-      </div>
     </header>
+
+    <div
+      id="site-menu"
+      inert={!menuOpen ? true : undefined}
+      className={`fixed inset-x-0 bottom-0 top-14 z-40 overflow-y-auto bg-ground transition-opacity duration-200 lg:hidden ${
+        menuOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
+      }`}
+    >
+      <nav className="screen-pad flex flex-col pt-2" aria-label={nav.state_label}>
+        {states.map((s) => (
+          <Link
+            key={s.id}
+            href={stateHref(s.id)}
+            scroll={false}
+            onClick={() => setMenuOpen(false)}
+            className={`rule-b py-4 font-ui text-lg tracking-tight ${
+              activeState === s.id ? 'text-accent' : 'text-ink'
+            }`}
+          >
+            {s.label}
+          </Link>
+        ))}
+        {pages.map((p) => (
+          <Link
+            key={p.href}
+            href={p.href}
+            onClick={() => setMenuOpen(false)}
+            className={`rule-b py-4 font-ui text-lg tracking-tight ${
+              pathname.startsWith(p.href) ? 'text-accent' : 'text-ink'
+            }`}
+          >
+            {p.label}
+          </Link>
+        ))}
+      </nav>
+    </div>
+    </>
   );
 }
 
