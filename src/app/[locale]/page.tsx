@@ -19,8 +19,20 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
      renders the selector for them as the site navigation. */
   const panels = [
     { id: 'overview', content: <OverviewPanel locale={locale} dict={t} /> },
-    { id: 'pathways', content: <PathwaysPanel dict={t} /> },
-    { id: 'capabilities', content: <CapabilitiesPanel locale={locale} /> },
+    { id: 'pathways', content: <PathwaysPanel locale={locale} dict={t} /> },
+    {
+      id: 'capabilities',
+      content: (
+        <CapabilitiesPanel
+          locale={locale}
+          pathwayLabels={{
+            industrial: t.selector_industrial,
+            green: t.selector_green,
+          }}
+          changeLabel={t.change_pathway}
+        />
+      ),
+    },
     {
       id: 'insights',
       content: <InsightsPanel locale={locale} dict={t} readSuffix={dict.resources.read_suffix} />,

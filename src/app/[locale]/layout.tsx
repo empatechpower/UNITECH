@@ -45,11 +45,13 @@ export default async function LocaleLayout({
 
   /* The home screen's states double as the site's primary navigation, so the
      list lives here rather than in the page. Order defines the nav order, and
-     the first entry is the default state at the bare `/` URL. */
+     the first entry is the default state at the bare `/` URL.
+
+     Capabilities is deliberately absent: it is reached by choosing a pathway,
+     not by picking it off the nav. */
   const states = [
     { id: 'overview', label: dict.homepage.deck_overview },
     { id: 'pathways', label: dict.homepage.deck_pathways },
-    { id: 'capabilities', label: dict.homepage.deck_capabilities },
     { id: 'insights', label: dict.homepage.deck_insights },
   ];
 
@@ -70,10 +72,6 @@ export default async function LocaleLayout({
             locale={locale}
             nav={dict.nav}
             states={states}
-            industryLabels={{
-              industrial: dict.common.industry_industrial,
-              green: dict.common.industry_green,
-            }}
           />
           <main className="flex min-h-0 flex-1 flex-col">{children}</main>
           <Footer locale={locale} footer={dict.footer} />

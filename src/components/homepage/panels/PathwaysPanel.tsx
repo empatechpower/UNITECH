@@ -1,15 +1,34 @@
 'use client';
 
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import type { Locale } from '@/i18n/config';
 import { useIndustry } from '@/components/IndustryProvider';
 import type { IndustryTheme } from '@/lib/industry-theme-types';
 
 /**
- * The fork. Choosing here does not just tint an accent: it swaps the ground,
- * the texture and the photographic grade for the whole site, and persists.
+ * The fork, and the only place the pathway is chosen now that the header
+ * control is gone.
+ *
+ * Choosing does two things at once: it swaps the ground, texture, accent and
+ * photographic grade for the whole site, and it moves the visitor into that
+ * pathway's capabilities. Pushing rather than replacing the URL means the back
+ * button returns here, which is the natural way out of a wrong turn.
  */
-export default function PathwaysPanel({ dict }: { dict: Record<string, string> }) {
-  const { industry: active, setIndustry: choose } = useIndustry();
+export default function PathwaysPanel({
+  locale,
+  dict,
+}: {
+  locale: Locale;
+  dict: Record<string, string>;
+}) {
+  const { industry: active, setIndustry } = useIndustry();
+  const router = useRouter();
+
+  const choose = (theme: IndustryTheme) => {
+    setIndustry(theme);
+    router.push(`/${locale}?view=capabilities`, { scroll: false });
+  };
 
   const options: {
     key: IndustryTheme;
@@ -45,10 +64,10 @@ export default function PathwaysPanel({ dict }: { dict: Record<string, string> }
             key={o.key}
             type="button"
             onClick={() => choose(o.key)}
-            aria-pressed={active === o.key}
+            aria-current={active === o.key}
             className={`group relative min-h-[200px] overflow-hidden text-left transition-opacity duration-300 lg:min-h-0 ${
               i > 0 ? 'rule-t lg:border-t-0 lg:rule-l' : ''
-            } ${active === o.key ? 'opacity-100' : 'opacity-70 hover:opacity-100'}`}
+            } ${active === o.key ? 'opacity-100' : 'opacity-80 hover:opacity-100'}`}
           >
             <Image
               src={o.image}
@@ -66,14 +85,9 @@ export default function PathwaysPanel({ dict }: { dict: Record<string, string> }
               <span className="mt-2 block max-w-[42ch] font-ui text-[13px] leading-snug text-white/75">
                 {o.body}
               </span>
-              <span
-                className={`mt-4 inline-flex w-fit items-center border px-4 py-2 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors ${
-                  active === o.key
-                    ? 'border-white bg-white text-ink'
-                    : 'border-white/45 text-white group-hover:border-white'
-                }`}
-              >
+              <span className="mt-4 inline-flex w-fit items-center gap-2 border border-white/45 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.16em] text-white transition-colors group-hover:border-white group-hover:bg-white group-hover:text-ink">
                 {dict.selector_cta}
+                <span aria-hidden="true">&rarr;</span>
               </span>
             </span>
           </button>

@@ -113,9 +113,9 @@
     "rfq_cta": "開始詢價",
     "deck_overview": "總覽",
     "deck_pathways": "產業路徑",
-    "deck_capabilities": "專業能力",
     "deck_insights": "產業洞察",
-    "deck_label": "章節"
+    "deck_label": "章節",
+    "change_pathway": "變更路徑"
   },
   "about": {
     "page_title": "關於我們",

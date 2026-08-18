@@ -7,21 +7,46 @@ import { useIndustry } from '@/components/IndustryProvider';
 import { pathwayCapabilities } from '@/data/capabilities';
 
 /**
- * What the chosen pathway actually contains. Switching pathway re-populates
- * this in the same frame as the ground changes, so the choice made on the
- * Pathways state has a visible consequence rather than being decorative.
+ * What the chosen pathway contains. Reached by choosing on the Pathways state,
+ * never from the nav.
+ *
+ * Since the header no longer carries a pathway control, this names the pathway
+ * the visitor is in and offers the way back to change it. Without that a
+ * visitor who deep-links here has no way to tell which world they are looking
+ * at, or to leave it.
  *
  * Eight grid slots for six things: the photograph and the flagship capability
  * take two each, the remaining four take one. Slot count matches content
  * exactly, so no breakpoint leaves a blank tile.
  */
-export default function CapabilitiesPanel({ locale }: { locale: Locale }) {
+export default function CapabilitiesPanel({
+  locale,
+  pathwayLabels,
+  changeLabel,
+}: {
+  locale: Locale;
+  pathwayLabels: { industrial: string; green: string };
+  changeLabel: string;
+}) {
   const { industry } = useIndustry();
   const set = pathwayCapabilities[industry];
 
   return (
-    <div className="panel-body">
-      <div className="grid h-full min-h-0 grid-cols-1 gap-px bg-rule sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-[1.15fr_1fr]">
+    <div className="panel-body flex flex-col">
+      <div className="screen-pad flex shrink-0 items-center justify-between gap-4 rule-b py-2.5">
+        <h2 className="font-ui text-[13px] font-semibold tracking-tight text-ink">
+          {pathwayLabels[industry]}
+        </h2>
+        <Link
+          href={`/${locale}?view=pathways`}
+          scroll={false}
+          className="font-mono text-[10px] uppercase tracking-[0.16em] text-graphite transition-colors hover:text-accent"
+        >
+          &larr; {changeLabel}
+        </Link>
+      </div>
+
+      <div className="grid min-h-0 flex-1 grid-cols-1 gap-px bg-rule sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-[1.15fr_1fr]">
         <div className="relative min-h-[200px] bg-ground sm:col-span-2 lg:min-h-0">
           <Image
             key={set.image}

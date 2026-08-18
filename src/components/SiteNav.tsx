@@ -5,7 +5,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useSearchParams } from 'next/navigation';
 import type { Locale } from '@/i18n/config';
-import { useIndustry } from '@/components/IndustryProvider';
 
 export interface NavState {
   id: string;
@@ -17,7 +16,6 @@ interface SiteNavProps {
   nav: Record<string, string>;
   /** The home screen's states, which double as the primary navigation. */
   states: NavState[];
-  industryLabels: { industrial: string; green: string };
 }
 
 export default function SiteNav(props: SiteNavProps) {
@@ -33,7 +31,10 @@ function NavInner(props: SiteNavProps) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const onHome = pathname === `/${props.locale}`;
-  const activeState = onHome ? searchParams.get('view') ?? props.states[0]?.id : null;
+  const view = searchParams.get('view') ?? props.states[0]?.id;
+  // Capabilities is reached by choosing a pathway, so it keeps Pathways lit
+  // rather than leaving nothing selected.
+  const activeState = onHome ? (view === 'capabilities' ? 'pathways' : view) : null;
   return <NavShell {...props} activeState={activeState} />;
 }
 
@@ -41,12 +42,10 @@ function NavShell({
   locale,
   nav,
   states,
-  industryLabels,
   activeState,
 }: SiteNavProps & { activeState: string | null }) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
-  const { industry, setIndustry } = useIndustry();
 
   const otherLocale: Locale = locale === 'en' ? 'zh' : 'en';
   const switchPath = pathname.replace(`/${locale}`, `/${otherLocale}`);
@@ -110,7 +109,6 @@ function NavShell({
         </nav>
 
         <div className="ml-auto hidden shrink-0 items-center gap-1.5 lg:flex xl:gap-2">
-          <PathwaySwitch industry={industry} onChange={setIndustry} labels={industryLabels} />
           <Link
             href={switchPath}
             className="border border-rule-strong px-2.5 py-2 font-mono text-[10px] uppercase tracking-[0.16em] text-graphite transition-colors duration-200 hover:bg-ground-sunk hover:text-ink xl:px-3"
@@ -180,39 +178,10 @@ function NavShell({
             </Link>
           ))}
           <div className="py-6">
-            <PathwaySwitch industry={industry} onChange={setIndustry} labels={industryLabels} />
-          </div>
+            </div>
         </nav>
       </div>
     </header>
   );
 }
 
-function PathwaySwitch({
-  industry,
-  onChange,
-  labels,
-}: {
-  industry: string;
-  onChange: (t: 'industrial' | 'green') => void;
-  labels: { industrial: string; green: string };
-}) {
-  return (
-    <div role="radiogroup" aria-label="Pathway" className="inline-flex items-stretch border border-rule-strong">
-      {(['industrial', 'green'] as const).map((t) => (
-        <button
-          key={t}
-          type="button"
-          role="radio"
-          aria-checked={industry === t}
-          onClick={() => onChange(t)}
-          className={`font-mono text-[10px] uppercase tracking-[0.16em] px-2.5 xl:px-3 py-2 transition-colors duration-200 ${
-            industry === t ? 'bg-ink text-ground' : 'text-graphite hover:bg-ground-sunk hover:text-ink'
-          }`}
-        >
-          {labels[t]}
-        </button>
-      ))}
-    </div>
-  );
-}

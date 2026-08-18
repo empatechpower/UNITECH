@@ -113,9 +113,9 @@
     "rfq_cta": "Start an RFQ",
     "deck_overview": "Overview",
     "deck_pathways": "Pathways",
-    "deck_capabilities": "Capabilities",
     "deck_insights": "Insights",
-    "deck_label": "Sections"
+    "deck_label": "Sections",
+    "change_pathway": "Change pathway"
   },
   "about": {
     "page_title": "ABOUT US",
