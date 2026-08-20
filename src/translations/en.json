@@ -67,7 +67,6 @@
     "hero_eyebrow": "UNITECH MANUFACTURING TECHNOLOGIES TAIWAN",
     "hero_headline_1": "Built in Taiwan.",
     "hero_headline_2": "Engineered for Tomorrow.",
-    "hero_cta": "Discover Our Work",
     "hero_scroll": "Scroll",
     "selector_eyebrow": "TWO PATHWAYS",
     "selector_question": "What future are you building?",
@@ -103,8 +102,7 @@
     "cta_title": "Let's Build Together.",
     "cta_button": "Get in Touch",
     "rfq_cta": "Start an RFQ",
-    "deck_overview": "Overview",
-    "deck_pathways": "Pathways",
+    "deck_overview": "Home",
     "deck_insights": "Insights",
     "deck_label": "Sections",
     "change_pathway": "Change pathway"

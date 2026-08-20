@@ -32,9 +32,9 @@ function NavInner(props: SiteNavProps) {
   const pathname = usePathname();
   const onHome = pathname === `/${props.locale}`;
   const view = searchParams.get('view') ?? props.states[0]?.id;
-  // Capabilities is reached by choosing a pathway, so it keeps Pathways lit
-  // rather than leaving nothing selected.
-  const activeState = onHome ? (view === 'capabilities' ? 'pathways' : view) : null;
+  // Capabilities is reached by choosing a pathway on the Home screen, so it
+  // keeps Home lit rather than leaving nothing selected.
+  const activeState = onHome ? (view === 'capabilities' ? 'home' : view) : null;
   return <NavShell {...props} activeState={activeState} />;
 }
 

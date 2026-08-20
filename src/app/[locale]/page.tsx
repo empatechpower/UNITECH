@@ -4,8 +4,7 @@ import { isValidLocale } from '@/i18n/config';
 import type { Locale } from '@/i18n/config';
 import Screen from '@/components/screen/Screen';
 import ScreenDeck from '@/components/screen/ScreenDeck';
-import OverviewPanel from '@/components/homepage/panels/OverviewPanel';
-import PathwaysPanel from '@/components/homepage/panels/PathwaysPanel';
+import HomePanel from '@/components/homepage/panels/HomePanel';
 import CapabilitiesPanel from '@/components/homepage/panels/CapabilitiesPanel';
 import InsightsPanel from '@/components/homepage/panels/InsightsPanel';
 
@@ -18,8 +17,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   /* Panel ids and order must match the `states` list in the layout, which
      renders the selector for them as the site navigation. */
   const panels = [
-    { id: 'overview', content: <OverviewPanel locale={locale} dict={t} /> },
-    { id: 'pathways', content: <PathwaysPanel locale={locale} dict={t} /> },
+    { id: 'home', content: <HomePanel locale={locale} dict={t} /> },
     {
       id: 'capabilities',
       content: (

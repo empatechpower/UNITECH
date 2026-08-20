@@ -38,7 +38,7 @@ export default function CapabilitiesPanel({
           {pathwayLabels[industry]}
         </h2>
         <Link
-          href={`/${locale}?view=pathways`}
+          href={`/${locale}`}
           scroll={false}
           className="font-mono text-[10px] uppercase tracking-[0.16em] text-graphite transition-colors hover:text-accent"
         >

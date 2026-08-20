@@ -47,11 +47,10 @@ export default async function LocaleLayout({
      list lives here rather than in the page. Order defines the nav order, and
      the first entry is the default state at the bare `/` URL.
 
-     Capabilities is deliberately absent: it is reached by choosing a pathway,
-     not by picking it off the nav. */
+     Capabilities is deliberately absent: it is reached by choosing a pathway
+     on the Home screen, not by picking it off the nav. */
   const states = [
-    { id: 'overview', label: dict.homepage.deck_overview },
-    { id: 'pathways', label: dict.homepage.deck_pathways },
+    { id: 'home', label: dict.homepage.deck_overview },
     { id: 'insights', label: dict.homepage.deck_insights },
   ];
 
