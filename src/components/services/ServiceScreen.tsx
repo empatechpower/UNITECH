@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Locale } from '@/i18n/config';
@@ -23,11 +23,22 @@ export default function ServiceScreen({
   contactCta: string;
 }) {
   const [active, setActive] = useState(0);
+  const detailRef = useRef<HTMLDivElement>(null);
   const area = service.areas[active];
 
+  /* On desktop the detail sits beside the list and updates in place. On a
+     phone it sits below it, so a tap would change something off-screen and
+     read as a dead control. Bring the detail into view instead. */
+  const select = (i: number) => {
+    setActive(i);
+    if (window.matchMedia('(max-width: 1023px)').matches) {
+      detailRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   return (
-    <div className="panel-body grid min-h-0 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
-      <div className="flex min-h-0 flex-col">
+    <div className="panel-body grid lg:min-h-0 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
+      <div className="flex flex-col lg:min-h-0">
         <div className="screen-pad shrink-0 py-6 lg:py-8">
           <h1 className="screen-display text-[clamp(1.5rem,3vw,2.25rem)]">{dict.page_title}</h1>
           <p className="mt-3 max-w-[42ch] font-ui text-[13px] leading-relaxed text-graphite">
@@ -35,12 +46,12 @@ export default function ServiceScreen({
           </p>
         </div>
 
-        <ul className="min-h-0 flex-1 overflow-y-auto rule-t" role="list">
+        <ul className="flex-1 rule-t lg:min-h-0 lg:overflow-y-auto" role="list">
           {service.areas.map((a, i) => (
             <li key={a.titleKey}>
               <button
                 type="button"
-                onClick={() => setActive(i)}
+                onClick={() => select(i)}
                 aria-current={i === active}
                 className={`screen-pad flex w-full items-center justify-between gap-4 rule-b py-3.5 text-left transition-colors duration-200 ${
                   i === active ? 'bg-ground-sunk' : 'hover:bg-ground-sunk/60'
@@ -78,8 +89,8 @@ export default function ServiceScreen({
         </div>
       </div>
 
-      <div className="relative flex min-h-[260px] flex-col rule-l lg:min-h-0">
-        <div className="relative min-h-0 flex-1">
+      <div ref={detailRef} className="relative flex min-h-[260px] scroll-mt-2 flex-col rule-l lg:min-h-0">
+        <div className="relative min-h-[180px] flex-1 lg:min-h-0">
           <Image
             key={area.image}
             src={area.image}

@@ -40,13 +40,13 @@ export default function CapabilitiesPanel({
         <Link
           href={`/${locale}`}
           scroll={false}
-          className="font-mono text-[10px] uppercase tracking-[0.16em] text-graphite transition-colors hover:text-accent"
+          className="link-mono"
         >
           &larr; {changeLabel}
         </Link>
       </div>
 
-      <div className="grid min-h-0 flex-1 grid-cols-1 gap-px bg-rule sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-[1.15fr_1fr]">
+      <div className="grid flex-1 grid-cols-1 gap-px bg-rule sm:grid-cols-2 lg:min-h-0 lg:grid-cols-4 lg:grid-rows-[1.15fr_1fr]">
         <div className="relative min-h-[200px] bg-ground sm:col-span-2 lg:min-h-0">
           <Image
             key={set.image}

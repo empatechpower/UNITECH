@@ -19,7 +19,7 @@ export default async function ServicesPage({ params }: { params: Promise<{ local
 
   return (
     <Screen>
-      <div className="panel-body grid min-h-0 grid-cols-1 gap-px bg-rule sm:grid-cols-2">
+      <div className="panel-body grid grid-cols-1 gap-px bg-rule sm:grid-cols-2 lg:min-h-0">
         {services.map((s) => {
           const section = dict[s.dictKey] as Record<string, string>;
           return (

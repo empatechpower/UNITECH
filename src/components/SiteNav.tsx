@@ -71,7 +71,7 @@ function NavShell({
     <>
     <header className="relative z-50 h-14 shrink-0 rule-b bg-ground/95 backdrop-blur-md lg:h-[68px]">
       <div className="screen-pad flex h-full items-center gap-3 xl:gap-6">
-        <Link href={`/${locale}`} className="flex shrink-0 items-center" aria-label="UNiTECH">
+        <Link href={`/${locale}`} className="flex h-11 shrink-0 items-center lg:h-auto" aria-label="UNiTECH">
           <Image
             src="/images/common/logo-color.png"
             alt="UNiTECH"
@@ -112,7 +112,7 @@ function NavShell({
         <div className="ml-auto hidden shrink-0 items-center gap-1.5 lg:flex xl:gap-2">
           <Link
             href={switchPath}
-            className="border border-rule-strong px-2.5 py-2 font-mono text-[10px] uppercase tracking-[0.16em] text-graphite transition-colors duration-200 hover:bg-ground-sunk hover:text-ink xl:px-3"
+            className="inline-flex min-h-11 items-center border border-rule-strong px-2.5 py-2 font-mono text-[10px] uppercase tracking-[0.16em] text-graphite transition-colors duration-200 hover:bg-ground-sunk hover:text-ink lg:min-h-0 xl:px-3"
           >
             {locale === 'en' ? '中文' : 'EN'}
           </Link>
@@ -122,7 +122,7 @@ function NavShell({
         <div className="ml-auto flex shrink-0 items-center gap-2 lg:hidden">
           <Link
             href={switchPath}
-            className="border border-rule-strong px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] text-graphite"
+            className="inline-flex min-h-11 items-center border border-rule-strong px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] text-graphite"
           >
             {locale === 'en' ? '中文' : 'EN'}
           </Link>
@@ -132,7 +132,7 @@ function NavShell({
             aria-expanded={menuOpen}
             aria-controls="site-menu"
             aria-label={menuOpen ? nav.menu_close : nav.menu_open}
-            className="flex h-9 w-9 flex-col items-center justify-center gap-[5px] border border-rule-strong"
+            className="flex h-11 w-11 flex-col items-center justify-center gap-[5px] border border-rule-strong"
           >
             <span
               className={`h-px w-4 bg-ink transition-transform duration-200 ${

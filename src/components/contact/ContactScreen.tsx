@@ -29,7 +29,7 @@ export default function ContactScreen({
 
   return (
     <div className="panel-body flex flex-col">
-      <div className="grid min-h-0 flex-1 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
+      <div className="grid flex-1 lg:min-h-0 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
         <div className="screen-pad flex min-h-0 flex-col justify-center py-8 lg:py-0 lg:pr-12">
           <h1 className="screen-display text-[clamp(1.6rem,3.4vw,2.5rem)]">
             {dict.hero_headline}

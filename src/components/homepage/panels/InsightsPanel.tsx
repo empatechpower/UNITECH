@@ -73,7 +73,7 @@ export default function InsightsPanel({
         </div>
       </div>
 
-      <div className="grid min-h-0 flex-1 auto-rows-fr grid-cols-1 gap-px rule-t bg-rule sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-2">
+      <div className="grid flex-1 auto-rows-fr grid-cols-1 gap-px rule-t bg-rule sm:grid-cols-2 lg:min-h-0 lg:grid-cols-4 lg:grid-rows-2">
         {articles.map((a, i) => {
           const copy = a[locale] ?? a.en;
           const lead = filter === 'all' && i === 0;

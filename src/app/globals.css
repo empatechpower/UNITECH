@@ -329,7 +329,8 @@ html[data-shell='screen'] body {
     @apply inline-flex select-none items-center justify-center gap-2 font-ui
            text-[11px] font-semibold uppercase tracking-[0.14em]
            transition-[background-color,color,border-color] duration-200
-           bg-accent px-6 py-3 text-white hover:bg-ink active:translate-y-px;
+           bg-accent px-6 py-3 text-white hover:bg-ink active:translate-y-px
+           min-h-11 lg:min-h-0;
   }
 
   .ctl-outline {
@@ -337,14 +338,16 @@ html[data-shell='screen'] body {
            text-[11px] font-semibold uppercase tracking-[0.14em]
            transition-[background-color,color,border-color] duration-200
            border border-rule-strong bg-transparent px-6 py-3 text-ink
-           hover:border-ink hover:bg-ground-sunk active:translate-y-px;
+           hover:border-ink hover:bg-ground-sunk active:translate-y-px
+           min-h-11 lg:min-h-0;
   }
 
   /* State selectors: the primary interaction of the whole site. */
   .ctl-state {
     @apply relative inline-flex select-none items-center justify-center gap-2
            font-ui text-[11px] font-semibold uppercase tracking-[0.14em]
-           transition-colors duration-200 px-4 py-2.5 text-graphite hover:text-ink;
+           transition-colors duration-200 px-4 py-2.5 text-graphite hover:text-ink
+           min-h-11 lg:min-h-0;
   }
 
   .ctl-state[aria-selected='true'],
@@ -378,6 +381,14 @@ html[data-shell='screen'] body {
   [data-industry='green'] .photo-grade {
     filter: saturate(0.82) contrast(1.02) brightness(1.02) sepia(0.14)
             hue-rotate(12deg);
+  }
+
+  /* Small mono links need a real hit area on touch; 13px of text does not
+     meet WCAG 2.5.8 (24px minimum), let alone iOS guidance. */
+  .link-mono {
+    @apply inline-flex items-center font-mono text-[10px] uppercase
+           tracking-[0.16em] text-graphite transition-colors
+           min-h-11 lg:min-h-0 hover:text-accent;
   }
 
   /* --- Ground texture -------------------------------------------------- */

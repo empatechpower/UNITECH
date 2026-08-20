@@ -30,7 +30,7 @@ export default function AboutScreen({
 
   return (
     <div className="panel-body flex flex-col">
-      <div className="grid min-h-0 flex-1 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)]">
+      <div className="grid flex-1 lg:min-h-0 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)]">
         <div className="screen-pad flex flex-col justify-center py-10 lg:py-0 lg:pr-12">
           <h1 className="screen-display text-[clamp(1.9rem,4.4vw,3.5rem)]">{dict.headline}</h1>
           <p className="mt-4 max-w-[44ch] font-ui text-[15px] leading-relaxed text-graphite lg:text-base">
