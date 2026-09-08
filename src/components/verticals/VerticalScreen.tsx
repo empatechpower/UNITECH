@@ -51,7 +51,7 @@ export default function VerticalScreen({
       <h1
         className={
           cover
-            ? 'screen-display max-w-[20ch] text-[clamp(1.6rem,2.5vw,2.9rem)]'
+            ? 'screen-display max-w-[34ch] text-[clamp(1.5rem,2.1vw,2.35rem)]'
             : 'screen-display max-w-[36ch] text-[clamp(1.375rem,2.1vw,1.9rem)]'
         }
       >
@@ -63,7 +63,7 @@ export default function VerticalScreen({
           <p
             key={p.en}
             className={`font-ui text-[13px] leading-relaxed text-graphite ${
-              cover ? 'max-w-[54ch]' : 'max-w-[68ch]'
+              cover ? 'max-w-[62ch]' : 'max-w-[68ch]'
             }`}
           >
             {pick(p)}
@@ -83,7 +83,7 @@ export default function VerticalScreen({
     <>
       <div
         className={`flex items-center justify-between gap-4 rule-t rule-b py-2 lg:py-1.5 ${
-          cover ? 'screen-pad' : 'px-5 sm:px-8 lg:px-12'
+          cover ? 'screen-pad bg-ground/92' : 'px-5 sm:px-8 lg:px-12'
         }`}
       >
         <p className="screen-label">{pick(vertical.registerHeading)}</p>
@@ -101,7 +101,7 @@ export default function VerticalScreen({
           <li
             key={s.en}
             className={`flex items-start gap-2.5 border-b border-r border-rule py-2.5 lg:py-1.5 ${
-              cover ? 'px-5 sm:px-8 lg:px-6 xl:px-7' : 'px-5 sm:px-8 lg:px-5 xl:px-6'
+              cover ? 'bg-ground/92 px-5 sm:px-8 lg:px-6 xl:px-7' : 'px-5 sm:px-8 lg:px-5 xl:px-6'
             }`}
           >
             <span className="spec-figure mt-px shrink-0 text-[10px] text-graphite">
@@ -152,13 +152,19 @@ export default function VerticalScreen({
               and the copy sits high against a clear top right. */}
           <div className="relative min-h-[34vh] shrink-0 lg:hidden" aria-hidden="true" />
 
-          <div className="screen-pad relative flex shrink-0 flex-col gap-4 py-6 lg:gap-4 lg:py-6">
-            {claim}
+          {/* Claim, copy, action and register in one bounded column set into
+              the wash. The register is held to the same measure as the copy
+              rather than running the full width, so the photograph stays clear
+              to its right and the two read as one block. */}
+          <div className="cover-column relative flex min-h-0 flex-col">
+            <div className="screen-pad flex shrink-0 flex-col gap-4 py-6 lg:gap-3 lg:py-4">
+              {claim}
+            </div>
+
+            {register}
+
+            <div className="hidden lg:block lg:flex-1" aria-hidden="true" />
           </div>
-
-          <div className="relative">{register}</div>
-
-          <div className="relative hidden lg:block lg:flex-1" aria-hidden="true" />
         </div>
       </div>
     );
