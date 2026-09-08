@@ -42,6 +42,13 @@ export interface Vertical {
    */
   theme?: IndustryTheme;
   image: string;
+  /**
+   * Which part of the photograph to keep. The left column is a tall narrow
+   * strip, so a landscape source centre-cropped can land on an empty patch:
+   * the industrial still centre-crops onto a blurred sleeve. Any CSS
+   * object-position value; defaults to centre.
+   */
+  imagePosition?: string;
   imageAlt: Bilingual;
   /** Short form, for the panel header and the page eyebrow. */
   label: Bilingual;
@@ -64,6 +71,7 @@ export const verticals: Record<VerticalKey, Vertical> = {
     key: 'industrial',
     theme: 'industrial',
     image: '/images/homepage-editorial/selector-industrial.png',
+    imagePosition: '68% center',
     imageAlt: {
       en: 'Operator at a machining centre on a Taiwanese production floor',
       zh: '台灣產線上的加工中心機操作員',

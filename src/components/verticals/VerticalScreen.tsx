@@ -11,9 +11,15 @@ import type { Vertical } from '@/data/verticals';
  * the sectors covered. Two of them render as a panel inside the home deck, two
  * as their own route; the only difference is what sits in the header strip.
  *
- * Layout is a header strip, an asymmetric intro row (photograph against copy),
- * and the register across the full width beneath. The register carries the most
- * items, so it gets the full measure rather than being squeezed into a column.
+ * Layout is a header strip over two columns: a tall photograph on the left, and
+ * on the right the claim, the copy, the call to action and then the register,
+ * all in one reading column.
+ *
+ * **The register belongs in the copy column, directly under the call to action.**
+ * It used to run full-width along the foot of the screen, below both columns,
+ * which read as a footer and buried the one thing a procurement buyer came for.
+ * Keeping it in the same column as the claim is what makes it read as the
+ * continuation of that argument rather than as page furniture.
  *
  * Grid discipline: the register's column count is chosen so the item count
  * divides exactly, which is why it is computed rather than fixed. Where a
@@ -65,7 +71,7 @@ export default function VerticalScreen({
       </div>
 
       {/* Intro row. Photograph against the claim, asymmetric by design. */}
-      <div className="grid shrink-0 lg:min-h-0 lg:flex-1 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)]">
+      <div className="grid lg:min-h-0 lg:flex-1 lg:grid-cols-[minmax(0,0.5fr)_minmax(0,1.5fr)]">
         <div className="relative min-h-[190px] overflow-hidden sm:min-h-[240px] lg:min-h-0">
           <Image
             key={vertical.image}
@@ -73,13 +79,15 @@ export default function VerticalScreen({
             alt={pick(vertical.imageAlt)}
             fill
             priority
-            sizes="(max-width: 1024px) 100vw, 42vw"
+            sizes="(max-width: 1024px) 100vw, 26vw"
+            style={{ objectPosition: vertical.imagePosition ?? 'center' }}
             className="photo-grade object-cover"
           />
         </div>
 
-        <div className="screen-pad flex min-h-0 flex-col justify-center gap-5 rule-t py-7 lg:border-t-0 lg:rule-l lg:py-8">
-          <h1 className="screen-display max-w-[22ch] text-[clamp(1.375rem,2.5vw,2.125rem)]">
+        <div className="flex min-h-0 flex-col rule-t lg:border-t-0 lg:rule-l">
+          <div className="screen-pad flex shrink-0 flex-col gap-4 py-6 lg:gap-4 lg:py-6">
+          <h1 className="screen-display max-w-[36ch] text-[clamp(1.375rem,2.1vw,1.9rem)]">
             {pick(vertical.tagline)}
           </h1>
 
@@ -87,7 +95,7 @@ export default function VerticalScreen({
             {vertical.body.map((p) => (
               <p
                 key={p.en}
-                className="max-w-[58ch] font-ui text-[13px] leading-relaxed text-graphite lg:text-sm"
+                className="max-w-[68ch] font-ui text-[13px] leading-relaxed text-graphite"
               >
                 {pick(p)}
               </p>
@@ -100,12 +108,12 @@ export default function VerticalScreen({
             </Link>
           </div>
         </div>
-      </div>
 
-      {/* The register. A spec list, not a card grid: this is what a buyer came
-          to read, so it gets the full measure and the tightest type. */}
-      <div className="shrink-0">
-        <div className="screen-pad flex items-center justify-between gap-4 rule-t rule-b py-2">
+        {/* The register, in the same column and immediately under the action.
+            Its own padding is tighter than the prose above it so the cells stay
+            wide enough to read: it is a table under an argument, not more
+            prose. Nothing may be inserted between the action and this block. */}
+        <div className="flex items-center justify-between gap-4 rule-t rule-b px-5 py-2 sm:px-8 lg:px-10">
           <p className="screen-label">{pick(vertical.registerHeading)}</p>
           <p className="spec-figure text-[11px] text-graphite">
             {String(vertical.sectors.length).padStart(2, '0')}
@@ -113,13 +121,13 @@ export default function VerticalScreen({
         </div>
 
         <ul
-          className={`grid grid-cols-1 gap-px bg-rule sm:grid-cols-2 ${COLUMN_CLASS[cols]}`}
+          className={`rule-b grid grid-cols-1 gap-px bg-rule sm:grid-cols-2 ${COLUMN_CLASS[cols]}`}
           role="list"
         >
           {vertical.sectors.map((s, i) => (
             <li
               key={s.en}
-              className="flex items-start gap-3 bg-ground px-5 py-3 sm:px-6 lg:py-3.5"
+              className="flex items-start gap-2.5 bg-ground px-5 py-2.5 sm:px-8 lg:px-4 lg:py-2.5 xl:px-5"
             >
               <span className="spec-figure mt-px shrink-0 text-[10px] text-graphite">
                 {String(i + 1).padStart(2, '0')}
@@ -130,13 +138,20 @@ export default function VerticalScreen({
             </li>
           ))}
 
-          {/* Completes the final row so the backing rule never shows as a block.
-              Zero of these at the current item counts. */}
+          {/* Completes the final row so the backing rule never shows as a solid
+              block. Zero of these at the current item counts. */}
           {Array.from({ length: fillers }, (_, i) => (
             <li key={`filler-${i}`} aria-hidden="true" className="hidden bg-ground lg:block" />
           ))}
         </ul>
+
+        {/* Leftover height lands below the register, against the full-height
+            photograph. Never above it: that gap is what made it read as a
+            footer. */}
+        <div className="hidden lg:block lg:flex-1" aria-hidden="true" />
+        </div>
       </div>
+
     </div>
   );
 }
