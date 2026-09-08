@@ -14,15 +14,26 @@ import { SITE_URL } from '@/lib/seo';
  *   and currently carry `noindex`; a sitemap entry would contradict that. They
  *   go back in when the client supplies real material.
  *
- * The home screen's `?view=` states are not listed either. They are states of
- * one URL, not URLs, and each canonicalises to the home screen.
+ * The home screen's `?view=` state is not listed either. Insights is a state of
+ * one URL, not a URL, and canonicalises to the home screen. Capabilities used
+ * to be the same and is now the two pathway routes below.
  */
-const ROUTES = ['', '/about-us', '/contact-us', '/partnerships', '/part-supply'] as const;
+const ROUTES = [
+  '',
+  '/industrial-manufacturing',
+  '/green-manufacturing',
+  '/partnerships',
+  '/part-supply',
+  '/about-us',
+  '/contact-us',
+] as const;
 
-/* The home screen is the entry point; the two verticals are the pages a
+/* The home screen is the entry point; the four verticals are the pages a
    procurement buyer arrives on from a search or an AI answer. */
 const PRIORITY: Record<string, number> = {
   '': 1,
+  '/industrial-manufacturing': 0.9,
+  '/green-manufacturing': 0.9,
   '/partnerships': 0.9,
   '/part-supply': 0.9,
   '/about-us': 0.7,

@@ -13,22 +13,30 @@ import type { IndustryTheme } from '@/lib/industry-theme-types';
  *
  * Choosing a pathway does two things at once: it swaps the ground, texture,
  * accent and photographic grade for the whole site, and it moves the visitor
- * into that pathway's capabilities. Pushing rather than replacing the URL means
+ * into that pathway's own route. Pushing rather than replacing the URL means
  * the back button returns here, which is the natural way out of a wrong turn.
+ *
+ * `setIndustry` still fires before the navigation so the ground swaps in the
+ * same frame rather than waiting on the route. The middleware sets the same
+ * cookie server-side for anyone who arrives at the route directly, which is
+ * the case the client cannot cover.
  */
 export default function HomePanel({
   locale,
   dict,
+  pathwayHrefs,
 }: {
   locale: Locale;
   dict: Record<string, string>;
+  /* Resolved on the server so the sector data never reaches the client bundle. */
+  pathwayHrefs: Record<IndustryTheme, string>;
 }) {
   const { industry: active, setIndustry } = useIndustry();
   const router = useRouter();
 
   const choose = (theme: IndustryTheme) => {
     setIndustry(theme);
-    router.push(`/${locale}?view=capabilities`, { scroll: false });
+    router.push(pathwayHrefs[theme], { scroll: false });
   };
 
   const pathways: {

@@ -16,6 +16,13 @@ interface SiteNavProps {
   nav: Record<string, string>;
   /** The home screen's states, which double as the primary navigation. */
   states: NavState[];
+  /**
+   * The two pathway routes, passed down rather than imported, so the sector
+   * data in verticals.ts stays out of the bundle of every page that renders
+   * the nav. They are not nav items: they exist here only so the bar can keep
+   * Home lit while one of them is open.
+   */
+  pathwaySlugs: string[];
 }
 
 export default function SiteNav(props: SiteNavProps) {
@@ -32,9 +39,11 @@ function NavInner(props: SiteNavProps) {
   const pathname = usePathname();
   const onHome = pathname === `/${props.locale}`;
   const view = searchParams.get('view') ?? props.states[0]?.id;
-  // Capabilities is reached by choosing a pathway on the Home screen, so it
-  // keeps Home lit rather than leaving nothing selected.
-  const activeState = onHome ? (view === 'capabilities' ? 'home' : view) : null;
+  // A pathway route is reached by choosing on the Home screen and sits
+  // underneath that choice, so it keeps Home lit rather than leaving nothing
+  // selected. It is deliberately not a nav item of its own.
+  const onPathway = props.pathwaySlugs.some((s) => pathname === `/${props.locale}/${s}`);
+  const activeState = onHome ? view : onPathway ? props.states[0]?.id : null;
   return <NavShell {...props} activeState={activeState} search={searchParams.toString()} />;
 }
 

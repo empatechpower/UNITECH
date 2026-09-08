@@ -48,8 +48,14 @@ export type VerticalLayout = 'split' | 'cover';
 export interface Vertical {
   key: VerticalKey;
   layout: VerticalLayout;
-  /** Set when the vertical is its own route rather than a pathway panel. */
-  slug?: string;
+  /**
+   * The vertical's route below the locale segment. All four have one: the two
+   * pathway grounds got theirs so that Green Manufacturing would be crawlable
+   * at all. It previously rendered only as a panel of the home screen, behind
+   * a cookie that defaults to industrial, so its four sectors appeared in no
+   * crawl of any URL.
+   */
+  slug: string;
   /**
    * Which ground the vertical paints. The two cross-cutting verticals inherit
    * whatever ground the visitor already chose, so they carry no theme.
@@ -84,6 +90,7 @@ export const verticals: Record<VerticalKey, Vertical> = {
   industrial: {
     key: 'industrial',
     layout: 'split',
+    slug: 'industrial-manufacturing',
     theme: 'industrial',
     image: '/images/homepage-editorial/selector-industrial.png',
     imagePosition: '68% center',
@@ -130,6 +137,7 @@ export const verticals: Record<VerticalKey, Vertical> = {
   green: {
     key: 'green',
     layout: 'split',
+    slug: 'green-manufacturing',
     theme: 'green',
     image: '/images/homepage-editorial/selector-green.png',
     imageAlt: {
@@ -286,4 +294,14 @@ export const getVerticalBySlug = (slug: string) =>
 export const pathwayVerticals: Record<IndustryTheme, Vertical> = {
   industrial: verticals.industrial,
   green: verticals.green,
+};
+
+/**
+ * The two pathway routes, keyed by the ground they declare. The middleware uses
+ * this in both directions: to set the ground when someone lands on one of them,
+ * and to send an old `?view=capabilities` link to the right one.
+ */
+export const pathwayRoutes: Record<string, IndustryTheme> = {
+  [verticals.industrial.slug]: 'industrial',
+  [verticals.green.slug]: 'green',
 };

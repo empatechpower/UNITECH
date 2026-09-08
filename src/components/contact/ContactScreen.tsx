@@ -144,7 +144,10 @@ function Field({
         name={id}
         type={type}
         required={required}
-        className="mt-2 w-full border border-rule-strong bg-ground-raised px-3 py-2.5 font-ui text-sm text-ink outline-none transition-colors focus:border-accent focus:ring-1 focus:ring-accent"
+        /* py-2.5 alone measured 42px, two short of the 44px every control on this
+           site is held to below lg. The buttons got min-h-11 when the touch
+           targets were fixed; the form fields were missed. */
+        className="mt-2 min-h-11 w-full border border-rule-strong bg-ground-raised px-3 py-2.5 font-ui text-sm text-ink outline-none transition-colors focus:border-accent focus:ring-1 focus:ring-accent lg:min-h-0"
       />
     </div>
   );

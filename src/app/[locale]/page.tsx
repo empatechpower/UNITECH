@@ -7,8 +7,8 @@ import type { Locale } from '@/i18n/config';
 import Screen from '@/components/screen/Screen';
 import ScreenDeck from '@/components/screen/ScreenDeck';
 import HomePanel from '@/components/homepage/panels/HomePanel';
-import CapabilitiesPanel from '@/components/homepage/panels/CapabilitiesPanel';
 import InsightsPanel from '@/components/homepage/panels/InsightsPanel';
+import { verticals } from '@/data/verticals';
 
 /* The home screen's `?view=` states are states of this URL, not URLs of their
    own, so they all canonicalise here. Capabilities and Insights get their own
@@ -37,16 +37,24 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const t = dict.homepage;
 
   /* Panel ids and order must match the `states` list in the layout, which
-     renders the selector for them as the site navigation. */
+     renders the selector for them as the site navigation.
+
+     Capabilities used to be a third panel here. It is a pair of real routes
+     now, because as a `?view=` state it was one URL to a crawler and rendered
+     only whichever pathway the cookie held, which left Green Manufacturing's
+     sectors out of every crawl. Old `?view=capabilities` links are redirected
+     by the middleware. */
   const panels = [
-    { id: 'home', content: <HomePanel locale={locale} dict={t} /> },
     {
-      id: 'capabilities',
+      id: 'home',
       content: (
-        <CapabilitiesPanel
+        <HomePanel
           locale={locale}
-          changeLabel={t.change_pathway}
-          rfqLabel={t.rfq_cta}
+          dict={t}
+          pathwayHrefs={{
+            industrial: `/${locale}/${verticals.industrial.slug}`,
+            green: `/${locale}/${verticals.green.slug}`,
+          }}
         />
       ),
     },

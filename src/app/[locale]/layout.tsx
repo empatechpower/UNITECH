@@ -7,6 +7,7 @@ import type { Locale } from '@/i18n/config';
 import { INDUSTRY_THEME_COOKIE } from '@/lib/industry-theme-types';
 import { IndustryProvider } from '@/components/IndustryProvider';
 import SiteNav from '@/components/SiteNav';
+import { verticals } from '@/data/verticals';
 import Footer from '@/components/Footer';
 
 /* One family carries display, UI and specs. IBM Plex was commissioned as an
@@ -88,6 +89,7 @@ export default async function LocaleLayout({
             locale={locale}
             nav={dict.nav}
             states={states}
+            pathwaySlugs={[verticals.industrial.slug, verticals.green.slug]}
           />
           <main className="flex min-h-0 flex-1 flex-col">{children}</main>
           <Footer locale={locale} footer={dict.footer} />
