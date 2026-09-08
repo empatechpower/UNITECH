@@ -34,16 +34,19 @@ export default function HomePanel({
   const pathways: {
     key: IndustryTheme;
     title: string;
+    desc: string;
     image: string;
   }[] = [
     {
       key: 'industrial',
       title: dict.selector_industrial,
+      desc: dict.selector_industrial_desc,
       image: '/images/homepage-editorial/selector-industrial.png',
     },
     {
       key: 'green',
       title: dict.selector_green,
+      desc: dict.selector_green_desc,
       image: '/images/homepage-editorial/selector-green.png',
     },
   ];
@@ -64,8 +67,8 @@ export default function HomePanel({
             {dict.hero_headline_2}
           </h1>
 
-          <p className="mt-6 max-w-[46ch] font-ui text-[15px] leading-relaxed text-graphite lg:text-base">
-            {dict.selector_industrial_desc}
+          <p className="mt-6 max-w-[50ch] font-ui text-[15px] leading-relaxed text-graphite lg:text-base">
+            {dict.hero_intro}
           </p>
 
           <div className="mt-8">
@@ -100,7 +103,7 @@ export default function HomePanel({
                 sizes="(max-width: 1024px) 100vw, 52vw"
                 className="photo-grade object-cover transition-transform duration-500 group-hover:scale-[1.03]"
               />
-              <span className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/35 to-transparent" />
+              <span className="absolute inset-0 bg-gradient-to-t from-ink/92 via-ink/58 via-45% to-transparent" />
 
               <span className="relative flex h-full flex-col justify-end p-5 lg:p-6">
                 <span className="flex items-center justify-between gap-4">
@@ -113,6 +116,9 @@ export default function HomePanel({
                   >
                     &rarr;
                   </span>
+                </span>
+                <span className="mt-1.5 block max-w-[46ch] font-ui text-[12.5px] leading-snug text-white/85">
+                  {p.desc}
                 </span>
               </span>
             </button>

@@ -23,11 +23,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       content: (
         <CapabilitiesPanel
           locale={locale}
-          pathwayLabels={{
-            industrial: t.selector_industrial,
-            green: t.selector_green,
-          }}
           changeLabel={t.change_pathway}
+          rfqLabel={t.rfq_cta}
         />
       ),
     },

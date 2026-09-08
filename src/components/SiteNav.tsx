@@ -59,6 +59,13 @@ function NavShell({
     return () => window.removeEventListener('keydown', onKey);
   }, [menuOpen]);
 
+  /* Two groups, one bar. The verticals are the offer; About and Contact are
+     the company. The hairline between them is what keeps six items legible. */
+  const verticalPages = [
+    { href: `/${locale}/partnerships`, label: nav.partnerships },
+    { href: `/${locale}/part-supply`, label: nav.part_supply },
+  ];
+
   const pages = [
     { href: `/${locale}/about-us`, label: nav.about },
     { href: `/${locale}/contact-us`, label: nav.contact },
@@ -92,6 +99,19 @@ function NavShell({
               className="ctl-state whitespace-nowrap px-2.5 xl:px-4"
             >
               {s.label}
+            </Link>
+          ))}
+
+          <span className="mx-1.5 h-5 w-px bg-rule xl:mx-3" aria-hidden="true" />
+
+          {verticalPages.map((p) => (
+            <Link
+              key={p.href}
+              href={p.href}
+              data-active={pathname.startsWith(p.href)}
+              className="ctl-state whitespace-nowrap px-2.5 xl:px-4"
+            >
+              {p.label}
             </Link>
           ))}
 
@@ -171,7 +191,7 @@ function NavShell({
             {s.label}
           </Link>
         ))}
-        {pages.map((p) => (
+        {[...verticalPages, ...pages].map((p) => (
           <Link
             key={p.href}
             href={p.href}
