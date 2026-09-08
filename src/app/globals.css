@@ -371,6 +371,15 @@ html[data-shell='screen'] body {
     min-height: 0;
   }
 
+  /* The sector register fills the height left under the copy, but stops at a
+     sane row height so a short register leaves ground rather than stretching
+     into near-empty cells. Below lg the panel scrolls and the cap is off. */
+  @media (min-width: 64rem) {
+    .register-grid {
+      max-height: var(--register-max);
+    }
+  }
+
   /* Photography is graded to its ground: the industrial world runs cool and
      hard, the sustainable world warm and open. Same asset, two materials. */
   .photo-grade {

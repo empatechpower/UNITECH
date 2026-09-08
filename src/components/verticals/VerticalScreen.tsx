@@ -11,22 +11,45 @@ import type { Vertical } from '@/data/verticals';
  * the sectors covered. Two of them render as a panel inside the home deck, two
  * as their own route; the only difference is what sits in the header strip.
  *
- * Layout is a header strip, an asymmetric intro row (photograph against copy),
- * and the register across the full width beneath. The register carries the most
- * items, so it gets the full measure rather than being squeezed into a column.
+ * Layout is a header strip, then an intro row of photograph against copy, then
+ * the register filling everything beneath it.
  *
- * Grid discipline: the register's column count is chosen so the item count
- * divides exactly, which is why it is computed rather than fixed. Where a
- * future edit to verticals.ts breaks divisibility, filler cells complete the
- * last row so the rule-coloured backing never shows through as a solid block.
+ * **The register sits directly under the copy and owns the rest of the screen.**
+ * It used to come after an intro row that grew to fill the height, which left a
+ * void under the call to action and pressed the register flush against the
+ * status bar as a thin strip. It read as page furniture, and the sectors are
+ * the one thing a procurement buyer came to read. So the intro row is now sized
+ * by its own content and the register takes the remaining height, its rows
+ * sharing that space equally. Do not give the intro row `flex-1`: that is the
+ * change that reintroduces the void.
+ *
+ * Because the register spans the full width it stays short enough to fit, which
+ * a column could not do. Sixteen items need four columns of four rows; in the
+ * width of a single column they became eight rows and overflowed the screen.
+ *
+ * Grid discipline: the column count is chosen so the item count divides exactly,
+ * which is why it is computed rather than fixed. Where a future edit to
+ * verticals.ts breaks divisibility, filler cells complete the last row, because
+ * the grid draws its hairlines as a 1px gap over a rule-coloured backing and a
+ * missing cell would otherwise show as a solid block.
  */
 
-/** Largest column count in [5,4,3,2] that divides the item count exactly. */
+/**
+ * Columns for the register, chosen so the item count divides exactly AND the
+ * resulting row count is near three.
+ *
+ * Divisibility alone is not enough. The register stretches its rows to fill the
+ * height, so four items across four columns became a single 450px row of nearly
+ * empty cells that read as content failing to load. Aiming at three rows keeps
+ * cells close to a sensible height whether the vertical has four sectors or
+ * sixteen. Ties go to the wider grid, which scans better.
+ */
 function columnsFor(count: number): number {
-  for (const c of [5, 4, 3, 2]) {
-    if (count % c === 0) return c;
-  }
-  return 4;
+  const divisors = [5, 4, 3, 2].filter((c) => count % c === 0);
+  if (!divisors.length) return 4;
+  return divisors.reduce((best, c) =>
+    Math.abs(count / c - 3) < Math.abs(count / best - 3) ? c : best
+  );
 }
 
 const COLUMN_CLASS: Record<number, string> = {
@@ -54,6 +77,15 @@ export default function VerticalScreen({
   const remainder = vertical.sectors.length % cols;
   const fillers = remainder === 0 ? 0 : cols - remainder;
 
+  /* The register stretches to fill the height, but only so far. A vertical with
+     four sectors cannot honestly fill half a 900px screen, and letting it try
+     produced 200px cells holding one short line, which reads as a loading
+     failure. Capping the row height leaves calm ground beneath the register
+     instead, which is whitespace rather than an apparent bug. Verticals with
+     enough sectors never reach the cap and fill the screen exactly. */
+  const rows = Math.ceil(vertical.sectors.length / cols);
+  const registerMaxHeight = rows * 116 + (rows - 1);
+
   return (
     <div className="panel-body flex flex-col">
       {/* Header strip: names the vertical, and on the deck offers the way out. */}
@@ -64,8 +96,8 @@ export default function VerticalScreen({
         {headerAction}
       </div>
 
-      {/* Intro row. Photograph against the claim, asymmetric by design. */}
-      <div className="grid shrink-0 lg:min-h-0 lg:flex-1 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)]">
+      {/* Intro row. Sized by its content, never by the leftover height. */}
+      <div className="grid shrink-0 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)]">
         <div className="relative min-h-[190px] overflow-hidden sm:min-h-[240px] lg:min-h-0">
           <Image
             key={vertical.image}
@@ -78,16 +110,16 @@ export default function VerticalScreen({
           />
         </div>
 
-        <div className="screen-pad flex min-h-0 flex-col justify-center gap-5 rule-t py-7 lg:border-t-0 lg:rule-l lg:py-8">
-          <h1 className="screen-display max-w-[22ch] text-[clamp(1.375rem,2.5vw,2.125rem)]">
+        <div className="screen-pad flex flex-col justify-center gap-4 rule-t py-6 lg:gap-4 lg:border-t-0 lg:rule-l lg:py-6">
+          <h1 className="screen-display max-w-[24ch] text-[clamp(1.375rem,2.3vw,2rem)]">
             {pick(vertical.tagline)}
           </h1>
 
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-2.5">
             {vertical.body.map((p) => (
               <p
                 key={p.en}
-                className="max-w-[58ch] font-ui text-[13px] leading-relaxed text-graphite lg:text-sm"
+                className="max-w-[60ch] font-ui text-[13px] leading-relaxed text-graphite"
               >
                 {pick(p)}
               </p>
@@ -102,41 +134,42 @@ export default function VerticalScreen({
         </div>
       </div>
 
-      {/* The register. A spec list, not a card grid: this is what a buyer came
-          to read, so it gets the full measure and the tightest type. */}
-      <div className="shrink-0">
-        <div className="screen-pad flex items-center justify-between gap-4 rule-t rule-b py-2">
-          <p className="screen-label">{pick(vertical.registerHeading)}</p>
-          <p className="spec-figure text-[11px] text-graphite">
-            {String(vertical.sectors.length).padStart(2, '0')}
-          </p>
-        </div>
+      {/* The register. Begins immediately under the copy and runs to the foot of
+          the screen, so there is no gap in which it could read as a footer. */}
+      <div className="screen-pad flex shrink-0 items-center justify-between gap-4 rule-t rule-b py-2">
+        <p className="screen-label">{pick(vertical.registerHeading)}</p>
+        <p className="spec-figure text-[11px] text-graphite">
+          {String(vertical.sectors.length).padStart(2, '0')}
+        </p>
+      </div>
 
-        <ul
-          className={`grid grid-cols-1 gap-px bg-rule sm:grid-cols-2 ${COLUMN_CLASS[cols]}`}
-          role="list"
-        >
-          {vertical.sectors.map((s, i) => (
-            <li
-              key={s.en}
-              className="flex items-start gap-3 bg-ground px-5 py-3 sm:px-6 lg:py-3.5"
-            >
+      <ul
+        className={`register-grid rule-b grid grid-cols-1 gap-px bg-rule sm:grid-cols-2 lg:min-h-0 lg:flex-1 lg:auto-rows-fr ${COLUMN_CLASS[cols]}`}
+        style={{ ['--register-max' as string]: `${registerMaxHeight}px` }}
+        role="list"
+      >
+        {vertical.sectors.map((s, i) => (
+          <li
+            key={s.en}
+            className="flex flex-col justify-center bg-ground px-5 py-3 sm:px-6 lg:py-3.5"
+          >
+            <div className="flex items-start gap-3">
               <span className="spec-figure mt-px shrink-0 text-[10px] text-graphite">
                 {String(i + 1).padStart(2, '0')}
               </span>
               <span className="font-ui text-[12.5px] font-medium leading-snug tracking-tight text-ink">
                 {pick(s)}
               </span>
-            </li>
-          ))}
+            </div>
+          </li>
+        ))}
 
-          {/* Completes the final row so the backing rule never shows as a block.
-              Zero of these at the current item counts. */}
-          {Array.from({ length: fillers }, (_, i) => (
-            <li key={`filler-${i}`} aria-hidden="true" className="hidden bg-ground lg:block" />
-          ))}
-        </ul>
-      </div>
+        {/* Completes the final row so the backing rule never shows as a solid
+            block. Zero of these at the current item counts. */}
+        {Array.from({ length: fillers }, (_, i) => (
+          <li key={`filler-${i}`} aria-hidden="true" className="hidden bg-ground lg:block" />
+        ))}
+      </ul>
     </div>
   );
 }
