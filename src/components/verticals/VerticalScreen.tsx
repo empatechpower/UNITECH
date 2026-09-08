@@ -71,7 +71,7 @@ export default function VerticalScreen({
       </div>
 
       {/* Intro row. Photograph against the claim, asymmetric by design. */}
-      <div className="grid lg:min-h-0 lg:flex-1 lg:grid-cols-[minmax(0,0.5fr)_minmax(0,1.5fr)]">
+      <div className="grid lg:min-h-0 lg:flex-1 lg:grid-cols-[minmax(0,0.62fr)_minmax(0,1.38fr)] xl:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] 2xl:grid-cols-2">
         <div className="relative min-h-[190px] overflow-hidden sm:min-h-[240px] lg:min-h-0">
           <Image
             key={vertical.image}
@@ -79,14 +79,14 @@ export default function VerticalScreen({
             alt={pick(vertical.imageAlt)}
             fill
             priority
-            sizes="(max-width: 1024px) 100vw, 26vw"
+            sizes="(max-width: 1024px) 100vw, 50vw"
             style={{ objectPosition: vertical.imagePosition ?? 'center' }}
             className="photo-grade object-cover"
           />
         </div>
 
         <div className="flex min-h-0 flex-col rule-t lg:border-t-0 lg:rule-l">
-          <div className="screen-pad flex shrink-0 flex-col gap-4 py-6 lg:gap-4 lg:py-6">
+          <div className="screen-pad flex shrink-0 flex-col gap-4 py-6 lg:gap-3.5 lg:py-5">
           <h1 className="screen-display max-w-[36ch] text-[clamp(1.375rem,2.1vw,1.9rem)]">
             {pick(vertical.tagline)}
           </h1>
@@ -113,21 +113,18 @@ export default function VerticalScreen({
             Its own padding is tighter than the prose above it so the cells stay
             wide enough to read: it is a table under an argument, not more
             prose. Nothing may be inserted between the action and this block. */}
-        <div className="flex items-center justify-between gap-4 rule-t rule-b px-5 py-2 sm:px-8 lg:px-10">
+        <div className="flex items-center justify-between gap-4 rule-t rule-b px-5 py-2 sm:px-8 lg:px-12 lg:py-1.5">
           <p className="screen-label">{pick(vertical.registerHeading)}</p>
           <p className="spec-figure text-[11px] text-graphite">
             {String(vertical.sectors.length).padStart(2, '0')}
           </p>
         </div>
 
-        <ul
-          className={`rule-b grid grid-cols-1 gap-px bg-rule sm:grid-cols-2 ${COLUMN_CLASS[cols]}`}
-          role="list"
-        >
+        <ul className="register-grid rule-b grid bg-ground" role="list">
           {vertical.sectors.map((s, i) => (
             <li
               key={s.en}
-              className="flex items-start gap-2.5 bg-ground px-5 py-2.5 sm:px-8 lg:px-4 lg:py-2.5 xl:px-5"
+              className="flex items-start gap-2.5 border-b border-r border-rule bg-ground px-5 py-2.5 sm:px-8 lg:px-5 lg:py-1.5 xl:px-6"
             >
               <span className="spec-figure mt-px shrink-0 text-[10px] text-graphite">
                 {String(i + 1).padStart(2, '0')}

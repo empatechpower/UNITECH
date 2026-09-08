@@ -371,6 +371,15 @@ html[data-shell='screen'] body {
     min-height: 0;
   }
 
+  /* The sector register reflows its column count to whatever the copy column
+     can hold, because that column is half the screen on a wide desktop and a
+     good deal narrower below that. Hairlines are per-cell borders rather than a
+     1px gap over a rule-coloured backing: auto-fit leaves the last row partial,
+     and the backing would show through the empty cells as a solid block. */
+  .register-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  }
+
   /* Photography is graded to its ground: the industrial world runs cool and
      hard, the sustainable world warm and open. Same asset, two materials. */
   .photo-grade {
