@@ -16,6 +16,14 @@ export async function generateStaticParams() {
  * prose and cannot be made to fit a viewport honestly. The screen frame still
  * holds, but the reading column scrolls inside it rather than the page
  * scrolling, so the chrome stays put.
+ *
+ * Below `lg` the whole two-part layout scrolls as one column, exactly as
+ * `.panel-body` does elsewhere: the photograph scrolls away above the prose.
+ * The scroller must be the container that carries `flex-1`, not a child of it.
+ * When the scroll sat on the inner column while the grid kept `lg:min-h-0`,
+ * the grid grew to its content height on phones, the column never overflowed
+ * its own auto-sized row, and so nothing scrolled at all: the article was
+ * clipped at the frame with no way to reach the rest of it.
  */
 export default async function ResourceArticlePage({
   params,
@@ -35,8 +43,8 @@ export default async function ResourceArticlePage({
 
   return (
     <Screen>
-      <div className="grid flex-1 lg:min-h-0 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)]">
-        <div className="flex min-h-0 flex-col overflow-y-auto">
+      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto lg:grid lg:overflow-visible lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)]">
+        <div className="flex flex-col lg:min-h-0 lg:overflow-y-auto">
           <div className="screen-pad py-8 lg:py-10">
             <Link
               href={`/${locale}?view=insights`}
@@ -78,7 +86,7 @@ export default async function ResourceArticlePage({
           </div>
         </div>
 
-        <div className="relative order-first min-h-[220px] rule-l lg:order-none lg:min-h-0">
+        <div className="relative order-first min-h-[220px] shrink-0 rule-l lg:order-none lg:min-h-0">
           <Image
             src={article.image}
             alt=""
