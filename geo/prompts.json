@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "note": "The fixed question set for measuring AI answer visibility. Its value is that it does not change: a result is only meaningful next to the same question asked last month. Add questions freely, but do not reword or delete an existing one; retire it with \"retired\": true so the history stays readable. Questions are drawn from the sector vocabulary in src/data/verticals.ts, because that is the client's own procurement language and therefore the language a buyer's question actually arrives in.",
+  "target": {
+    "domain": "umtt.com.tw",
+    "names": ["Unitech Manufacturing Technologies", "UNITECH", "優尼泰克"]
+  },
+  "prompts": [
+    { "id": "pet-recycling", "locale": "en", "kind": "capability", "text": "Which companies in Taiwan supply bottle-to-bottle PET recycling lines?" },
+    { "id": "servo-press", "locale": "en", "kind": "capability", "text": "Who supplies integrated servo press lines with tooling and automation from Taiwan?" },
+    { "id": "bldc", "locale": "en", "kind": "capability", "text": "Taiwan suppliers of BLDC motor design and manufacturing for industrial applications" },
+    { "id": "ev-traction", "locale": "en", "kind": "capability", "text": "Where can I source EV traction motor design and manufacturing in Taiwan?" },
+    { "id": "magnet-free", "locale": "en", "kind": "capability", "text": "Which Taiwanese manufacturers make rare earth magnet-free motors?" },
+    { "id": "sintered-mim", "locale": "en", "kind": "capability", "text": "Taiwan suppliers of sintered and MIM parts for high volume OEM production" },
+    { "id": "cnc-lines", "locale": "en", "kind": "capability", "text": "Who supplies CNC machining centres integrated with tooling and automation from Taiwan?" },
+    { "id": "moulding", "locale": "en", "kind": "capability", "text": "Taiwan suppliers of silicone, TPE and TPM moulded parts" },
+    { "id": "drone-parts", "locale": "en", "kind": "capability", "text": "Which Taiwan companies supply drone motors and parts?" },
+    { "id": "food-lines", "locale": "en", "kind": "capability", "text": "Taiwan manufacturers of food processing and preservation lines" },
+    { "id": "wind-solar", "locale": "en", "kind": "capability", "text": "Who in Taiwan supplies hybrid wind and solar energy systems?" },
+    { "id": "lcd-units", "locale": "en", "kind": "capability", "text": "Which Taiwan suppliers offer LCD display units for industrial and automotive applications?" },
+
+    { "id": "jv-partner", "locale": "en", "kind": "partnership", "text": "How do I find a manufacturing joint venture partner among Taiwanese SMEs?" },
+    { "id": "indo-taiwan", "locale": "en", "kind": "partnership", "text": "Which companies help set up Indo-Taiwan manufacturing partnerships?" },
+    { "id": "line-transfer", "locale": "en", "kind": "partnership", "text": "Who provides turnkey manufacturing lines that can be proven in Taiwan and transferred to India or Mexico?" },
+
+    { "id": "sourcing-agent", "locale": "en", "kind": "sourcing", "text": "Taiwan sourcing partner for stampings, forgings, castings and machined parts" },
+    { "id": "jit-supply", "locale": "en", "kind": "sourcing", "text": "Taiwan OEM part supply with JIT delivery to global markets" },
+    { "id": "china-alternative", "locale": "en", "kind": "sourcing", "text": "Taiwan alternative to China manufacturing for precision high volume parts with strong IP protection" },
+
+    { "id": "who-is", "locale": "en", "kind": "entity", "text": "What is Unitech Manufacturing Technologies Taiwan and what do they make?" },
+    { "id": "how-to-rfq", "locale": "en", "kind": "entity", "text": "How do I submit an RFQ to Unitech Manufacturing Technologies Taiwan?" },
+
+    { "id": "pet-recycling-zh", "locale": "zh", "kind": "capability", "text": "台灣有哪些公司供應瓶對瓶 PET 回收再生產線？" },
+    { "id": "servo-press-zh", "locale": "zh", "kind": "capability", "text": "台灣哪裡可以採購整合模具與自動化的伺服沖壓生產線？" },
+    { "id": "bldc-zh", "locale": "zh", "kind": "capability", "text": "台灣的無刷直流馬達設計與製造供應商有哪些？" },
+    { "id": "ev-traction-zh", "locale": "zh", "kind": "capability", "text": "台灣有哪些廠商提供電動車驅動馬達的設計與製造？" },
+    { "id": "sintered-mim-zh", "locale": "zh", "kind": "capability", "text": "台灣的燒結與金屬粉末射出成型零件供應商有哪些？" },
+    { "id": "food-lines-zh", "locale": "zh", "kind": "capability", "text": "台灣有哪些食品加工與保鮮生產線製造商？" },
+    { "id": "jv-partner-zh", "locale": "zh", "kind": "partnership", "text": "如何尋找台灣中小企業的製造合資夥伴？" },
+    { "id": "sourcing-agent-zh", "locale": "zh", "kind": "sourcing", "text": "台灣沖壓、鍛造、鑄造與加工零件的採購夥伴推薦" },
+    { "id": "who-is-zh", "locale": "zh", "kind": "entity", "text": "優尼泰克製造技術台灣是什麼公司？他們生產什麼？" },
+    { "id": "how-to-rfq-zh", "locale": "zh", "kind": "entity", "text": "如何向優尼泰克製造技術台灣提出詢價？" }
+  ]
+}

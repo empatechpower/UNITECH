@@ -2,6 +2,37 @@ import { NextRequest, NextResponse } from 'next/server';
 import { locales, defaultLocale } from '@/i18n/config';
 import { INDUSTRY_THEME_COOKIE, type IndustryTheme } from '@/lib/industry-theme-types';
 import { pathwayRoutes, pathwayVerticals } from '@/data/verticals';
+import { identifyCrawler } from '@/lib/ai-crawlers';
+
+/**
+ * One structured line per AI crawler arrival, and nothing for human traffic.
+ *
+ * The site has no analytics, so without this there is no way to tell whether
+ * the robots.txt policy did anything: whether the search crawlers we allowed
+ * are actually arriving, which routes they take, and whether the two new
+ * pathway routes get fetched at all. Counting only the bots in the shared
+ * table keeps the log signal rather than noise.
+ *
+ * The prefix is there to be grepped. In Vercel's log viewer, filter on
+ * "[ai-crawler]"; every line is self-contained JSON.
+ *
+ * Caveat worth knowing before reading a zero as bad news: runtime logs are
+ * retained for a limited window and are not a durable store. Keeping a history
+ * beyond that window needs a log drain, which is a dashboard setting rather
+ * than anything this repo can configure.
+ */
+function logCrawler(request: NextRequest, pathname: string) {
+  const crawler = identifyCrawler(request.headers.get('user-agent'));
+  if (!crawler) return;
+  console.log(
+    `[ai-crawler] ${JSON.stringify({
+      bot: crawler.agent,
+      kind: crawler.kind,
+      path: pathname,
+      at: new Date().toISOString(),
+    })}`
+  );
+}
 
 export function middleware(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
@@ -14,6 +45,8 @@ export function middleware(request: NextRequest) {
   ) {
     return;
   }
+
+  logCrawler(request, pathname);
 
   const locale = locales.find((l) => pathname === `/${l}` || pathname.startsWith(`/${l}/`));
 

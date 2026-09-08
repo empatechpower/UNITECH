@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/lib/seo';
+import { agentsOfKind } from '@/lib/ai-crawlers';
 
 /**
  * Before this file existed, /robots.txt returned 200 text/html: the request
@@ -14,25 +15,11 @@ import { SITE_URL } from '@/lib/seo';
  * search policy that AI citation actually depends on.
  */
 
-/* Retrieval and answer-engine crawlers. These are the ones that decide whether
-   the site can be cited in an AI-generated answer. Blocking any of them opts
-   the site out of that engine's results. */
-const AI_SEARCH_AGENTS = [
-  'OAI-SearchBot', // ChatGPT Search indexing
-  'ChatGPT-User', // ChatGPT fetching a page on a user's behalf
-  'Claude-SearchBot', // Claude search indexing
-  'Claude-User', // Claude fetching a page on a user's behalf
-  'PerplexityBot', // Perplexity indexing
-  'Perplexity-User',
-  'Google-Extended', // gates Gemini and AI Overviews
-  'Applebot-Extended',
-];
-
-/* Foundation-model training corpora. Allowing these is an IP decision for the
-   client, not a visibility one: denying them costs no citations. To opt out,
-   move this list into a disallow rule. It is deliberately kept separate so that
-   change cannot accidentally take AI_SEARCH_AGENTS with it. */
-const AI_TRAINING_AGENTS = ['GPTBot', 'CCBot', 'anthropic-ai', 'Bytespider'];
+/* Both lists come from `src/lib/ai-crawlers.ts`, which the middleware also
+   reads to count arrivals. Allowing a bot you do not count means you cannot
+   tell whether the permission did anything. */
+const AI_SEARCH_AGENTS = agentsOfKind('search');
+const AI_TRAINING_AGENTS = agentsOfKind('training');
 
 export default function robots(): MetadataRoute.Robots {
   return {
