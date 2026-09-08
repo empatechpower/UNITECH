@@ -194,5 +194,13 @@
     "company": "優尼泰克製造技術台灣有限公司",
     "rights": "版權所有。",
     "tagline": "為您帶來台灣最優質的製造"
+  },
+  "seo": {
+    "home_title": "UNITECH 優尼泰克台灣｜製造生產線、零件供應與製造合作",
+    "home_description": "台灣採購門戶，為海外 OEM 買家提供整合式沖壓與 CNC 製造生產線、精密零件供應，以及與台灣中小企業的製造合資合作。",
+    "about_title": "關於 UNITECH",
+    "about_description": "我們是台灣公司，提供整合式製造生產線、來自 20 多家認證夥伴的精密零件，以及無刷直流馬達、觸控面板與電子零組件，行銷全球。",
+    "contact_title": "聯繫 UNITECH",
+    "contact_description": "向優尼泰克製造技術台灣提出詢價。工程評估、報價與全球交付，48 小時內回覆。"
   }
 }

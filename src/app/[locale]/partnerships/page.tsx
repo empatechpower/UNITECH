@@ -5,6 +5,7 @@ import type { Locale } from '@/i18n/config';
 import Screen from '@/components/screen/Screen';
 import VerticalScreen from '@/components/verticals/VerticalScreen';
 import { verticals } from '@/data/verticals';
+import { buildMetadata } from '@/lib/seo';
 
 const vertical = verticals.partnerships;
 
@@ -15,10 +16,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale: rawLocale } = await params;
   const locale = isValidLocale(rawLocale) ? rawLocale : ('en' as Locale);
-  return {
-    title: `${vertical.title[locale]} | UNITECH`,
+  return buildMetadata({
+    locale,
+    path: '/partnerships',
+    title: vertical.title[locale],
     description: vertical.tagline[locale],
-  };
+  });
 }
 
 /**

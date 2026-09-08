@@ -1,4 +1,5 @@
 import { cookies } from 'next/headers';
+import { notFound } from 'next/navigation';
 import { IBM_Plex_Sans, IBM_Plex_Mono } from 'next/font/google';
 import { getDictionary } from '@/i18n/getDictionary';
 import { isValidLocale } from '@/i18n/config';
@@ -29,6 +30,15 @@ export async function generateStaticParams() {
   return [{ locale: 'en' }, { locale: 'zh' }];
 }
 
+/**
+ * Without this, `[locale]` matched anything with a dot in it that the middleware
+ * had waved through: /robots.txt, /sitemap.xml and /llms.txt all resolved here,
+ * failed `isValidLocale`, silently fell back to English and returned the
+ * homepage with a 200. Every such path was a duplicate of the home screen, and
+ * crawlers asking for robots.txt were handed HTML.
+ */
+export const dynamicParams = false;
+
 export default async function LocaleLayout({
   children,
   params,
@@ -37,7 +47,14 @@ export default async function LocaleLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale: rawLocale } = await params;
-  const locale = isValidLocale(rawLocale) ? rawLocale : ('en' as Locale);
+  /* Not a silent fallback to English. Every request that reaches this layout
+     with an unknown locale is a URL that does not exist, and answering it with
+     the English homepage at 200 is what turned /llms.txt, /foo.xml and every
+     other dotted path the middleware waves through into a duplicate of the
+     home screen. `dynamicParams = false` above states the same intent to the
+     build; this enforces it at request time, which is what actually holds. */
+  if (!isValidLocale(rawLocale)) notFound();
+  const locale: Locale = rawLocale;
   const dict = await getDictionary(locale);
   const cookieStore = await cookies();
   const industry =

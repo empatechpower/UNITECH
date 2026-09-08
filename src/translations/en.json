@@ -194,5 +194,13 @@
     "company": "Unitech Manufacturing Technologies Taiwan Co., Ltd.",
     "rights": "All rights reserved.",
     "tagline": "Bringing You The Best of Taiwan"
+  },
+  "seo": {
+    "home_title": "UNITECH Taiwan | Manufacturing Lines, Part Supply and Partnerships",
+    "home_description": "Taiwan sourcing gateway for OEM buyers: integrated press and CNC manufacturing lines, precision part supply, and manufacturing joint ventures with Taiwanese SMEs.",
+    "about_title": "About UNITECH",
+    "about_description": "A Taiwan company supplying integrated manufacturing lines, precision parts from over 20 certified partners, and BLDC motors, panel PCs and electronic components worldwide.",
+    "contact_title": "Contact UNITECH",
+    "contact_description": "Send an RFQ to Unitech Manufacturing Technologies Taiwan. Engineering review, quotation and global delivery, with a response within 48 hours."
   }
 }

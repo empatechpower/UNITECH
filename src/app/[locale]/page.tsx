@@ -1,4 +1,6 @@
 import { Suspense } from 'react';
+import type { Metadata } from 'next';
+import { buildMetadata } from '@/lib/seo';
 import { getDictionary } from '@/i18n/getDictionary';
 import { isValidLocale } from '@/i18n/config';
 import type { Locale } from '@/i18n/config';
@@ -7,6 +9,26 @@ import ScreenDeck from '@/components/screen/ScreenDeck';
 import HomePanel from '@/components/homepage/panels/HomePanel';
 import CapabilitiesPanel from '@/components/homepage/panels/CapabilitiesPanel';
 import InsightsPanel from '@/components/homepage/panels/InsightsPanel';
+
+/* The home screen's `?view=` states are states of this URL, not URLs of their
+   own, so they all canonicalise here. Capabilities and Insights get their own
+   identity from their own routes, not from a query string. */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale: rawLocale } = await params;
+  const locale = isValidLocale(rawLocale) ? rawLocale : ('en' as Locale);
+  const { seo } = await getDictionary(locale);
+  return buildMetadata({
+    locale,
+    path: '',
+    title: seo.home_title,
+    description: seo.home_description,
+    bareTitle: true,
+  });
+}
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: rawLocale } = await params;

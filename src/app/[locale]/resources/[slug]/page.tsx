@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -5,10 +6,45 @@ import { getDictionary } from '@/i18n/getDictionary';
 import { isValidLocale } from '@/i18n/config';
 import type { Locale } from '@/i18n/config';
 import Screen from '@/components/screen/Screen';
+import { buildMetadata } from '@/lib/seo';
 import { resourceArticles, categoryLabels, getResourceArticle } from '@/data/resources';
 
 export async function generateStaticParams() {
   return resourceArticles.map((a) => ({ slug: a.slug }));
+}
+
+/**
+ * These seven articles are placeholder copy, written to demonstrate the IA.
+ * They read as real editorial and carry confident specifics, which is exactly
+ * what an answer engine extracts and attributes to the client, so they are
+ * held out of search until real material arrives from them.
+ *
+ * `noindex` rather than a robots.txt disallow, deliberately: a disallowed page
+ * is never fetched, so the crawler never learns it should not be indexed.
+ * `follow` stays on so the links out of them still carry.
+ *
+ * Removing `noindex: true` here and restoring the article routes to
+ * `src/app/sitemap.ts` is the whole of what re-publishing them takes.
+ */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}): Promise<Metadata> {
+  const { locale: rawLocale, slug } = await params;
+  const locale = isValidLocale(rawLocale) ? rawLocale : ('en' as Locale);
+  const article = getResourceArticle(slug);
+  if (!article) return {};
+  const copy = article[locale === 'zh' ? 'zh' : 'en'];
+
+  return buildMetadata({
+    locale,
+    path: `/resources/${slug}`,
+    title: copy.title,
+    description: copy.excerpt,
+    type: 'article',
+    noindex: true,
+  });
 }
 
 /**
