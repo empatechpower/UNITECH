@@ -23,7 +23,12 @@ import type { Vertical, Bilingual } from '@/data/verticals';
  * **The register stays directly under the call to action in both.** It once ran
  * full-width along the foot of the screen, where it read as a footer and buried
  * the one thing a procurement buyer came for. Nothing goes between the action
- * and the register, and leftover height belongs beneath it.
+ * and the register.
+ *
+ * The whole block is centred in the frame from `lg` up, which is what the rest
+ * of the screens already do (Home, About and Contact all centre their copy
+ * columns). It used to sit at the top with the leftover height below it, which
+ * read as the page having run out rather than as composition.
  *
  * The register reflows its column count with `auto-fit` (`.register-grid`),
  * because the width available to it ranges from half the screen to all of it.
@@ -156,14 +161,12 @@ export default function VerticalScreen({
               the wash. The register is held to the same measure as the copy
               rather than running the full width, so the photograph stays clear
               to its right and the two read as one block. */}
-          <div className="cover-column relative flex min-h-0 flex-col">
+          <div className="cover-column relative flex min-h-0 flex-col lg:flex-1 lg:justify-center">
             <div className="screen-pad flex shrink-0 flex-col gap-4 py-6 lg:gap-3 lg:py-4">
               {claim}
             </div>
 
             {register}
-
-            <div className="hidden lg:block lg:flex-1" aria-hidden="true" />
           </div>
         </div>
       </div>
@@ -189,14 +192,12 @@ export default function VerticalScreen({
           />
         </div>
 
-        <div className="flex min-h-0 flex-col rule-t lg:border-t-0 lg:rule-l">
+        <div className="flex min-h-0 flex-col rule-t lg:border-t-0 lg:rule-l lg:justify-center">
           <div className="screen-pad flex shrink-0 flex-col gap-4 py-6 lg:gap-3.5 lg:py-5">
             {claim}
           </div>
 
           {register}
-
-          <div className="hidden lg:block lg:flex-1" aria-hidden="true" />
         </div>
       </div>
     </div>
