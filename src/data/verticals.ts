@@ -32,8 +32,22 @@ export interface Bilingual {
 
 export type VerticalKey = 'industrial' | 'green' | 'partnerships' | 'part-supply';
 
+/**
+ * How a vertical is composed.
+ *
+ * `split` is the spec sheet: photograph beside the copy, used by the two
+ * pathway grounds because a visitor arrives there to compare capability.
+ *
+ * `cover` is the dossier cover: one full-bleed photograph with the copy set
+ * into a wash of the ground. The two cross-cutting verticals use it, so that
+ * arriving at Partnerships or Part Supply from the nav feels like opening a
+ * different document rather than re-reading the pathway screen.
+ */
+export type VerticalLayout = 'split' | 'cover';
+
 export interface Vertical {
   key: VerticalKey;
+  layout: VerticalLayout;
   /** Set when the vertical is its own route rather than a pathway panel. */
   slug?: string;
   /**
@@ -69,6 +83,7 @@ const SECTORS_HEADING: Bilingual = {
 export const verticals: Record<VerticalKey, Vertical> = {
   industrial: {
     key: 'industrial',
+    layout: 'split',
     theme: 'industrial',
     image: '/images/homepage-editorial/selector-industrial.png',
     imagePosition: '68% center',
@@ -114,6 +129,7 @@ export const verticals: Record<VerticalKey, Vertical> = {
 
   green: {
     key: 'green',
+    layout: 'split',
     theme: 'green',
     image: '/images/homepage-editorial/selector-green.png',
     imageAlt: {
@@ -143,6 +159,7 @@ export const verticals: Record<VerticalKey, Vertical> = {
 
   partnerships: {
     key: 'partnerships',
+    layout: 'cover',
     slug: 'partnerships',
     image: '/images/homepage-editorial/vertical-partnerships.jpeg',
     imageAlt: {
@@ -203,6 +220,7 @@ export const verticals: Record<VerticalKey, Vertical> = {
 
   'part-supply': {
     key: 'part-supply',
+    layout: 'cover',
     slug: 'part-supply',
     image: '/images/homepage/oem-product.jpg',
     imageAlt: {

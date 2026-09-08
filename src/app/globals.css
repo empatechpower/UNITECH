@@ -371,13 +371,68 @@ html[data-shell='screen'] body {
     min-height: 0;
   }
 
+  /* --- Cover layout ----------------------------------------------------- */
+  /* Partnerships and Part Supply set their copy into a full-bleed photograph
+     rather than beside it. The wash is built from --ground rather than white,
+     so it follows the pathway the visitor is already on: cool bone on the
+     industrial ground, warm bone on the sustainable one.
+
+     Two gradients, each doing one job. The upright one guarantees the register
+     sits on solid ground however many sectors it holds; the raking one carries
+     the claim and leaves the photograph clear at the top right. Below lg the
+     raking gradient is dropped: at phone widths there is no room to place copy
+     beside anything, so the wash is upright and the photograph reads as a band
+     above the text. */
+  .cover-wash {
+    background:
+      linear-gradient(
+        to top,
+        var(--ground) 0%,
+        var(--ground) 50%,
+        color-mix(in srgb, var(--ground) 62%, transparent) 66%,
+        transparent 82%
+      );
+  }
+
+  @media (min-width: 64rem) {
+    .cover-wash {
+      background:
+        linear-gradient(
+          to top,
+          var(--ground) 0%,
+          var(--ground) 48%,
+          color-mix(in srgb, var(--ground) 46%, transparent) 64%,
+          transparent 82%
+        ),
+        linear-gradient(
+          100deg,
+          var(--ground) 0%,
+          var(--ground) 32%,
+          color-mix(in srgb, var(--ground) 86%, transparent) 48%,
+          color-mix(in srgb, var(--ground) 34%, transparent) 68%,
+          transparent 88%
+        );
+    }
+  }
+
   /* The sector register reflows its column count to whatever the copy column
      can hold, because that column is half the screen on a wide desktop and a
      good deal narrower below that. Hairlines are per-cell borders rather than a
      1px gap over a rule-coloured backing: auto-fit leaves the last row partial,
      and the backing would show through the empty cells as a solid block. */
   .register-grid {
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--register-min, 15rem)), 1fr));
+  }
+
+  /* On the cover the register has the whole width. Wide cells wrap less and
+     total wrapped lines dominate the height, so the minimum goes up -- but only
+     once the screen is tall and wide enough to spend the rows on. Below that,
+     a narrower minimum buys more columns and fewer rows, which is what keeps
+     sixteen sectors on the screen. */
+  @media (min-width: 96rem) {
+    .register-grid[data-layout='cover'] {
+      --register-min: 21rem;
+    }
   }
 
   /* Photography is graded to its ground: the industrial world runs cool and
