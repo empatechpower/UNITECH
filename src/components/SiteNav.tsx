@@ -21,7 +21,7 @@ interface SiteNavProps {
 export default function SiteNav(props: SiteNavProps) {
   // useSearchParams needs a boundary so the rest of the shell can stay static.
   return (
-    <Suspense fallback={<NavShell {...props} activeState={null} />}>
+    <Suspense fallback={<NavShell {...props} activeState={null} search={null} />}>
       <NavInner {...props} />
     </Suspense>
   );
@@ -35,7 +35,7 @@ function NavInner(props: SiteNavProps) {
   // Capabilities is reached by choosing a pathway on the Home screen, so it
   // keeps Home lit rather than leaving nothing selected.
   const activeState = onHome ? (view === 'capabilities' ? 'home' : view) : null;
-  return <NavShell {...props} activeState={activeState} />;
+  return <NavShell {...props} activeState={activeState} search={searchParams.toString()} />;
 }
 
 function NavShell({
@@ -43,12 +43,23 @@ function NavShell({
   nav,
   states,
   activeState,
-}: SiteNavProps & { activeState: string | null }) {
+  search,
+}: SiteNavProps & { activeState: string | null; search: string | null }) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const otherLocale: Locale = locale === 'en' ? 'zh' : 'en';
-  const switchPath = pathname.replace(`/${locale}`, `/${otherLocale}`);
+  // The locale toggle must land on the same screen in the other language.
+  // `usePathname` excludes the query string, and the home screen's state lives
+  // entirely in `?view=`, so building the target from the pathname alone sent
+  // every state of Home to the other language's homepage. Carry the search
+  // params across. The Suspense fallback cannot read them and degrades to the
+  // bare path, but Next fills the boundary per request, so the served HTML
+  // already carries the query (verified with curl on a production build).
+  const basePath = pathname.startsWith(`/${locale}`)
+    ? `/${otherLocale}${pathname.slice(locale.length + 1)}`
+    : `/${otherLocale}`;
+  const switchPath = search ? `${basePath}?${search}` : basePath;
 
   useEffect(() => setMenuOpen(false), [pathname]);
 
