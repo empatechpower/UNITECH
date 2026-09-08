@@ -6,6 +6,8 @@ import Screen from '@/components/screen/Screen';
 import VerticalScreen from '@/components/verticals/VerticalScreen';
 import { verticals } from '@/data/verticals';
 import { buildMetadata } from '@/lib/seo';
+import JsonLd from '@/components/JsonLd';
+import { breadcrumbSchema, graph, verticalServiceSchema } from '@/lib/structured-data';
 
 const vertical = verticals["part-supply"];
 
@@ -40,6 +42,14 @@ export default async function PartSupplyPage({
 
   return (
     <Screen>
+      <JsonLd
+        data={graph(
+          verticalServiceSchema(locale, vertical),
+          breadcrumbSchema(locale, dict.nav.home, [
+            { name: vertical.title[locale], path: `/${vertical.slug}` },
+          ])
+        )}
+      />
       <VerticalScreen locale={locale} vertical={vertical} rfqLabel={dict.homepage.rfq_cta} />
     </Screen>
   );

@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import { buildMetadata } from '@/lib/seo';
+import JsonLd from '@/components/JsonLd';
+import { breadcrumbSchema, graph } from '@/lib/structured-data';
 import { getDictionary } from '@/i18n/getDictionary';
 import { isValidLocale } from '@/i18n/config';
 import type { Locale } from '@/i18n/config';
@@ -29,6 +31,13 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
 
   return (
     <Screen>
+      <JsonLd
+        data={graph(
+          breadcrumbSchema(locale, dict.nav.home, [
+            { name: dict.nav.about, path: '/about-us' },
+          ])
+        )}
+      />
       <AboutScreen locale={locale} dict={dict.about} />
     </Screen>
   );

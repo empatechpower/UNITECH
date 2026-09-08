@@ -8,6 +8,8 @@ import { INDUSTRY_THEME_COOKIE } from '@/lib/industry-theme-types';
 import { IndustryProvider } from '@/components/IndustryProvider';
 import SiteNav from '@/components/SiteNav';
 import { verticals } from '@/data/verticals';
+import JsonLd from '@/components/JsonLd';
+import { graph, organizationSchema, webSiteSchema } from '@/lib/structured-data';
 import Footer from '@/components/Footer';
 
 /* One family carries display, UI and specs. IBM Plex was commissioned as an
@@ -84,6 +86,14 @@ export default async function LocaleLayout({
         as before, because <Screen> is what opts a page into the fixed shell.
       */}
       <body className="flex min-h-[100dvh] flex-col bg-ground font-ui antialiased">
+        {/* Emitted once for the whole site. Page-specific nodes reference the
+            Organization by @id rather than repeating it. */}
+        <JsonLd
+          data={graph(
+            organizationSchema(locale, dict.seo.home_description),
+            webSiteSchema(locale, dict.seo.home_title, dict.seo.home_description)
+          )}
+        />
         <IndustryProvider initialIndustry={industry}>
           <SiteNav
             locale={locale}
