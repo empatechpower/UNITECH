@@ -13,10 +13,16 @@ import { company } from '@/data/company';
  * same values. Phone and email are links: on a phone, tapping the number should
  * dial it.
  *
- * TODO: the form still has no submission handler. It validates and reports
- * state client-side only, and on submit it points the visitor at the email and
- * phone below rather than pretending to have sent anything.
+ * The form posts to `/api/contact`, which emails the client through Resend.
+ * Any failure, including the handler not being configured yet, tells the buyer
+ * to email or phone instead: the message never claims to have sent something
+ * it did not.
  */
+
+type Status = 'idle' | 'sending' | 'sent' | 'failed';
+
+const fill = (template: string, values: Record<string, string>) =>
+  template.replace(/\{(\w+)\}/g, (_, k: string) => values[k] ?? '');
 export default function ContactScreen({
   locale,
   dict,
@@ -24,7 +30,9 @@ export default function ContactScreen({
   locale: Locale;
   dict: Record<string, string>;
 }) {
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<Status>('idle');
+  const [replyTo, setReplyTo] = useState('');
+  const direct = { email: company.email, phone: company.phone.display };
 
   const steps = [
     { title: dict.step1_title, body: dict.step1_desc },
@@ -44,11 +52,35 @@ export default function ContactScreen({
 
           <form
             className="mt-6"
-            onSubmit={(e) => {
+            onSubmit={async (e) => {
               e.preventDefault();
-              setSubmitted(true);
+              const form = e.currentTarget;
+              const data = Object.fromEntries(new FormData(form));
+              setStatus('sending');
+              try {
+                const res = await fetch('/api/contact', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(data),
+                });
+                if (!res.ok) throw new Error(String(res.status));
+                setReplyTo(String(data.email ?? ''));
+                form.reset();
+                setStatus('sent');
+              } catch {
+                setStatus('failed');
+              }
             }}
           >
+            {/* Honeypot. No person can see or reach it; the handler discards
+                any submission that fills it. `hidden` rather than positioned
+                off-screen, so it is out of the tab order and the hit-test
+                sweep alike. */}
+            <div hidden aria-hidden="true">
+              <label htmlFor="website">Website</label>
+              <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+            </div>
+
             <div className="grid gap-4 sm:grid-cols-2">
               <Field id="name" label={dict.form_name} required />
               <Field id="email" label={dict.form_email} type="email" required />
@@ -70,16 +102,23 @@ export default function ContactScreen({
             </div>
 
             <div className="mt-5 flex flex-wrap items-center gap-4">
-              <button type="submit" className="ctl-solid">
-                {dict.form_submit_cta}
+              <button
+                type="submit"
+                className="ctl-solid"
+                disabled={status === 'sending'}
+                aria-busy={status === 'sending'}
+              >
+                {status === 'sending' ? dict.form_sending : dict.form_submit_cta}
               </button>
-              {submitted ? (
-                <p role="status" className="font-ui text-[12px] text-graphite">
-                  {locale === 'zh'
-                    ? `表單尚未啟用，請來信 ${company.email} 或致電 ${company.phone.display}。`
-                    : `This form is not connected yet. Please email ${company.email} or call ${company.phone.display}.`}
-                </p>
-              ) : null}
+              {/* Always in the DOM, so a screen reader is already listening
+                  when the text changes. */}
+              <p role="status" className="font-ui text-[12px] text-graphite">
+                {status === 'sent'
+                  ? fill(dict.form_sent, { email: replyTo })
+                  : status === 'failed'
+                    ? fill(dict.form_failed, direct)
+                    : null}
+              </p>
             </div>
           </form>
         </div>

@@ -185,7 +185,10 @@
     "trust_oem": "OEM Expertise",
     "trust_partners": "20+ Manufacturing Partners",
     "trust_delivery": "Global Delivery",
-    "trust_engineering": "Engineering Support"
+    "trust_engineering": "Engineering Support",
+    "form_sending": "Sending",
+    "form_sent": "Sent. We will reply to you at {email}.",
+    "form_failed": "Your message could not be sent. Please email {email} or call {phone}."
   },
   "footer": {
     "company": "Unitech Manufacturing Technologies Taiwan Co., Ltd.",

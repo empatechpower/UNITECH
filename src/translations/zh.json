@@ -185,7 +185,10 @@
     "trust_oem": "OEM 專業能力",
     "trust_partners": "20+ 製造合作夥伴",
     "trust_delivery": "全球配送",
-    "trust_engineering": "工程技術支援"
+    "trust_engineering": "工程技術支援",
+    "form_sending": "傳送中",
+    "form_sent": "已送出，我們將回覆至 {email}。",
+    "form_failed": "訊息未能送出，請來信 {email} 或致電 {phone}。"
   },
   "footer": {
     "company": "優尼泰克製造技術台灣有限公司",
