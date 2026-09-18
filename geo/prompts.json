@@ -3,7 +3,7 @@
   "note": "The fixed question set for measuring AI answer visibility. Its value is that it does not change: a result is only meaningful next to the same question asked last month. Add questions freely, but do not reword or delete an existing one; retire it with \"retired\": true so the history stays readable. Questions are drawn from the sector vocabulary in src/data/verticals.ts, because that is the client's own procurement language and therefore the language a buyer's question actually arrives in.",
   "target": {
     "domain": "umtt.com.tw",
-    "names": ["Unitech Manufacturing Technologies", "UNITECH", "優尼泰克"]
+    "names": ["Unitech Manufacturing Technologies", "UNITECH", "優尼泰克", "優利特"]
   },
   "prompts": [
     { "id": "pet-recycling", "locale": "en", "kind": "capability", "text": "Which companies in Taiwan supply bottle-to-bottle PET recycling lines?" },

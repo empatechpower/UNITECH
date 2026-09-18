@@ -1,6 +1,7 @@
 import type { Locale } from '@/i18n/config';
 import type { Vertical, Bilingual } from '@/data/verticals';
 import { verticals } from '@/data/verticals';
+import { company } from '@/data/company';
 import { SITE_URL } from '@/lib/seo';
 
 /**
@@ -13,11 +14,12 @@ import { SITE_URL } from '@/lib/seo';
  * text. Everything here is generated from `verticals.ts` and the dictionaries,
  * so nothing has to be kept in sync by hand.
  *
- * **Nothing in here is asserted unless the site can support it.** No founding
- * date, no registration number, no street address, no telephone and no email
- * appear anywhere in the content, so none of them appear here. Inventing them
- * would be worse than omitting them: schema is exactly what an engine quotes
- * back as fact.
+ * **Nothing in here is asserted unless the site can support it.** The contact
+ * facts come from `src/data/company.ts`, where every value is traced to the
+ * client's own answer or to Taiwan's company registry. Business hours are still
+ * left out: the site publishes them, but the client has not yet confirmed them.
+ * Schema is exactly what an engine quotes back as fact, so an unconfirmed value
+ * is worse than a missing one.
  */
 
 export const ORG_ID = `${SITE_URL}/#organization`;
@@ -48,15 +50,40 @@ export function organizationSchema(locale: Locale, description: string) {
       url: `${SITE_URL}/images/common/logo-color.png`,
     },
     description,
+    /* The registry's name, which differs from the display name above; see the
+       note in company.ts. `legalName` is the field that ties this entity to
+       the government record, which is the strongest signal we can give that
+       the company is real. */
+    legalName: company.legalNameZh,
+    /* Taiwan's Unified Business Number. `taxID` because in Taiwan it is the
+       tax registration number; `identifier` so the scheme is named. */
+    taxID: company.ubn,
+    identifier: {
+      '@type': 'PropertyValue',
+      propertyID: 'Unified Business Number (統一編號)',
+      value: company.ubn,
+    },
+    foundingDate: company.founded,
     address: {
       '@type': 'PostalAddress',
-      addressCountry: 'TW',
+      streetAddress: company.address.street,
+      addressLocality: company.address.locality,
+      postalCode: company.address.postalCode,
+      addressCountry: company.address.country,
     },
-    /* TODO, and the highest-value gap on the site: telephone, email and a
-       street address. The contact screen still reads "Contact for details" for
-       all three, so there is nothing true to put here. When the client supplies
-       them, add `telephone`, `email` and the rest of PostalAddress, plus a
-       `contactPoint` of contactType "sales" carrying the published RFQ hours. */
+    telephone: company.phone.e164,
+    email: company.email,
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'sales',
+      telephone: company.phone.e164,
+      email: company.email,
+      availableLanguage: ['en', 'zh-TW'],
+    },
+    /* No `sameAs` yet. The client sent directory homepages (Taiwantrade, CENS,
+       TAITRA, web66) rather than UNITECH's own listings on them, and a personal
+       LinkedIn profile. `sameAs` must point at pages about this organisation,
+       so none of those qualify; the specific listing URLs are still to come. */
     knowsAbout: knowsAbout(locale),
   };
 }

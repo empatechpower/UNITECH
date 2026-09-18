@@ -2,13 +2,20 @@
 
 import { useState } from 'react';
 import type { Locale } from '@/i18n/config';
+import { company } from '@/data/company';
 
 /**
  * One screen: the form, the details needed to act on it, and the process a
  * submitted RFQ goes through.
  *
- * TODO: the form has no submission handler. It validates and reports state
- * client-side only; wiring a backend is still outstanding.
+ * The details come from `src/data/company.ts`, which the Organization schema
+ * also reads, so what a buyer sees and what an answer engine is told are the
+ * same values. Phone and email are links: on a phone, tapping the number should
+ * dial it.
+ *
+ * TODO: the form still has no submission handler. It validates and reports
+ * state client-side only, and on submit it points the visitor at the email and
+ * phone below rather than pretending to have sent anything.
  */
 export default function ContactScreen({
   locale,
@@ -69,8 +76,8 @@ export default function ContactScreen({
               {submitted ? (
                 <p role="status" className="font-ui text-[12px] text-graphite">
                   {locale === 'zh'
-                    ? '表單尚未連接後端，請直接與我們聯繫。'
-                    : 'This form is not connected to a backend yet. Please contact us directly.'}
+                    ? `表單尚未啟用，請來信 ${company.email} 或致電 ${company.phone.display}。`
+                    : `This form is not connected yet. Please email ${company.email} or call ${company.phone.display}.`}
                 </p>
               ) : null}
             </div>
@@ -85,9 +92,13 @@ export default function ContactScreen({
           </div>
           <dl className="grid gap-4">
             {[
-              { k: dict.address_label, v: dict.address },
-              { k: dict.phone_label, v: dict.phone },
-              { k: dict.email_label, v: dict.email },
+              { k: dict.address_label, v: company.address[locale] },
+              {
+                k: dict.phone_label,
+                v: company.phone.display,
+                href: `tel:${company.phone.e164}`,
+              },
+              { k: dict.email_label, v: company.email, href: `mailto:${company.email}` },
               { k: dict.hours_label, v: dict.hours },
               { k: dict.response_label, v: dict.response },
             ].map((row) => (
@@ -95,7 +106,21 @@ export default function ContactScreen({
                 <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-graphite">
                   {row.k}
                 </dt>
-                <dd className="mt-1 font-ui text-sm text-ink">{row.v}</dd>
+                <dd className="mt-1 font-ui text-sm text-ink">
+                  {row.href ? (
+                    /* min-h-11 below lg like every other control; the underline
+                       is the affordance, since a number in body type does not
+                       otherwise read as tappable. */
+                    <a
+                      href={row.href}
+                      className="inline-flex min-h-11 items-center underline decoration-rule-strong underline-offset-4 transition-colors hover:decoration-accent lg:min-h-0"
+                    >
+                      {row.v}
+                    </a>
+                  ) : (
+                    row.v
+                  )}
+                </dd>
               </div>
             ))}
           </dl>
